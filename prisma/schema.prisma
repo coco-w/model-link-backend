@@ -1,11 +1,19 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
+}
+
+generator nestjsDto {
+  provider                        = "prisma-generator-nestjs-dto"
+  output                          = "../src/generated/nestjs-dto"
+  outputToNestJsResourceStructure = "false"
+  exportRelationModifierClasses   = "true"
+  reExport                        = "false"
+  createDtoPrefix                 = "Create"
+  updateDtoPrefix                 = "Update"
+  dtoSuffix                       = "Dto"
+  entityPrefix                    = ""
+  entitySuffix                    = ""
+  fileNamingStyle                 = "camel"
 }
 
 datasource db {
@@ -14,9 +22,33 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  /// cuid() generates a unique ID
+  id          String        @id @default(cuid())
+  name        String        @unique()
+  password    String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  GraphicItem GraphicItem[]
+}
+
+model GraphicItem {
+  id              String           @id @default(cuid())
+  name            String
+  structure       String
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  config          String           @db.Text
+  svg_one_hundred String           @db.Text
+  svg_twenty      String           @db.Text
+  type            GraphicItem_type @default(vertex)
+  userId          String
+  value           String           @db.Text
+  user            User             @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "GraphicItem_userId_fkey")
+}
+
+enum GraphicItem_type {
+  vertex
+  edge
 }
