@@ -5,7 +5,7 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common'
-import dayjs from 'dayjs'
+import * as dayjs from 'dayjs'
 
 // 们需要访问底层平台 `Request`和 `Response`
 import { Request, Response } from 'express'
@@ -20,9 +20,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const status = exception.getStatus()
     // 用于接收主动发错的错误信息
     const { message, code } = exception.getResponse() as any
+    const date = dayjs().format('yyyy-MM-DD HH:mm:ss')
     response.status(status).json({
       code: code || status,
-      timestamp: dayjs().format('yyyy-MM-DD HH:mm:ss'),
+      timestamp: date,
       path: request.url,
       error: 'Bad Request',
       message,

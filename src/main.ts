@@ -10,11 +10,13 @@ async function bootstrap() {
     .setTitle('model link')
     .setDescription('The Model Link API description')
     .setVersion('0.1')
+    .addBearerAuth()
     .build()
   const document = SwaggerModule.createDocument(app, config)
   SwaggerModule.setup('api', app, document)
   app.useGlobalFilters(new HttpExceptionFilter())
   app.useGlobalInterceptors(new TransformInterceptor())
+  app.enableCors()
   await app.listen(3000)
 }
 bootstrap()

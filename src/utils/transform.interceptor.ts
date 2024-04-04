@@ -28,7 +28,7 @@ export class TransformInterceptor implements NestInterceptor {
         return {
           data,
           code: 200,
-          message: '请求成功',
+          message: data.message || '请求成功',
         }
       }),
     )

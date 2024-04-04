@@ -2,19 +2,23 @@ import { HttpException, Injectable } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
+import { JwtService } from '@nestjs/jwt'
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
   async create(createUserDto: CreateUserDto) {
     const u = await this.prisma.user.findUnique({
       where: {
-        name: createUserDto.name,
+        username: createUserDto.username,
       },
     })
     if (u) {
       return new HttpException('用户已存在', 400)
     }
-    return this.prisma.user.create({ data: createUserDto })
+    return '注册成功'
   }
 
   async update(data: UpdateUserDto) {
@@ -22,8 +26,9 @@ export class UserService {
       await this.prisma.user.update({
         data: {
           password: data.password,
+          realname: data.realname,
         },
-        where: { name: data.name },
+        where: { username: data.username },
       })
       return '更新成功'
     } catch (error) {
@@ -34,13 +39,22 @@ export class UserService {
   async login(data: UpdateUserDto) {
     const item = await this.prisma.user.findUnique({
       where: {
-        name: data.name,
+        username: data.username,
         password: data.password,
       },
       select: {
-        name: true,
+        username: true,
+        realname: true,
       },
     })
-    return item || new HttpException('账号或密码错误', 400)
+    if (item) {
+      const payload = { username: item.username, realname: item.realname }
+      const user_token = await this.jwtService.signAsync(payload)
+      return {
+        user_token,
+        user_info: item,
+      }
+    }
+    return new HttpException('账号或密码错误', 400)
   }
 }
