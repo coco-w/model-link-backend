@@ -4899,6 +4899,11 @@ prisma-class-generator@^0.2.9:
     change-case "^4.1.2"
     prettier "2.5.1"
 
+prisma-paginate@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.npmjs.org/prisma-paginate/-/prisma-paginate-5.2.1.tgz#00e3761091229d3aea80ea9d21852089891e43f4"
+  integrity sha512-GwR39iSOGUqTkfpEl75hA/LyMUkhAwc2DqyhDkO6ug+u3zBUZlIfEWolqHOCrHOAKQlaNpgnP2nxFLH0LjBMtA==
+
 prisma@^5.12.0:
   version "5.12.0"
   resolved "https://registry.npmjs.org/prisma/-/prisma-5.12.0.tgz#b4194a549f5e0365233fb14f3fadef3bed057b5e"

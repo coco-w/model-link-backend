@@ -36,18 +36,18 @@ model User {
 }
 
 model GraphicItem {
-  id              String           @id @default(cuid())
-  name            String
-  structure       String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  config          String           @db.Text
-  svg_one_hundred String           @db.Text
-  svg_twenty      String           @db.Text
-  type            GraphicItem_type @default(vertex)
-  userId          String
-  value           String           @db.Text
-  user            User             @relation(fields: [userId], references: [id])
+  id            String           @id @default(cuid())
+  name          String
+  structure     String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  config        String           @db.Text
+  svgOneHundred String           @db.Text
+  svgTwenty     String           @db.Text
+  type          GraphicItem_type @default(vertex)
+  userId        String
+  value         String?          @db.Text
+  user          User             @relation(fields: [userId], references: [id])
 
   @@index([userId], map: "GraphicItem_userId_fkey")
 }

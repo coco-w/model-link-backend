@@ -8,8 +8,8 @@ export class GraphicItem {
   createdAt: Date
   updatedAt: Date
   config: string
-  svg_one_hundred: string
-  svg_twenty: string
+  svgOneHundred: string
+  svgTwenty: string
   type: GraphicItem_type
   userId: string
   value: string

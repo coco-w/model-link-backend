@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common'
 import { CreateGraphicItemDto } from './dto/create-graphic-item.dto'
 import { UpdateGraphicItemDto } from './dto/update-graphic-item.dto'
+import { PrismaService } from 'src/prisma/prisma.service'
+import { ListPagination } from 'src/utils/pagination'
 
 @Injectable()
 export class GraphicItemService {
-  create(createGraphicItemDto: CreateGraphicItemDto) {
-    return 'This action adds a new graphicItem'
+  constructor(private prisma: PrismaService) {}
+  async create(createGraphicItemDto: CreateGraphicItemDto, userId: string) {
+    const item = await this.prisma.graphicItem.create({
+      data: {
+        ...createGraphicItemDto,
+        userId: userId,
+      },
+    })
+    return item.id
+  }
+  async update(updateGraphicItemDto: UpdateGraphicItemDto) {
+    await this.prisma.graphicItem.update({
+      data: updateGraphicItemDto,
+      where: { id: updateGraphicItemDto.id },
+    })
   }
 
-  findAll() {
-    return `This action returns all graphicItem`
+  async remove(id: string) {
+    await this.prisma.graphicItem.delete({
+      where: {
+        id,
+      },
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} graphicItem`
-  }
-
-  update(id: number, updateGraphicItemDto: UpdateGraphicItemDto) {
-    return `This action updates a #${id} graphicItem`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} graphicItem`
+  async list(data: UpdateGraphicItemDto & ListPagination) {
+    const { pageSize, pageNo, ...rest } = data
+    return this.prisma.graphicItem.paginate({
+      limit: Number(data.pageSize),
+      page: Number(data.pageNo),
+      where: {
+        name: {
+          startsWith: rest.name,
+        },
+        type: {
+          equals: rest.type || undefined,
+        },
+      },
+    })
   }
 }

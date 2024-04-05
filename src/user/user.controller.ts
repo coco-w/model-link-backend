@@ -9,7 +9,7 @@ import {
 import { UserService } from './user.service'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AuthGuard } from './user.guard'
 import { Public } from 'src/app.config'
 
@@ -20,6 +20,7 @@ export class UserController {
 
   @Post('register')
   @Public()
+  @ApiOperation({ summary: '注册' })
   @HttpCode(HttpStatus.OK)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
@@ -28,11 +29,13 @@ export class UserController {
   @Post('update')
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
+  @ApiOperation({ summary: '更新' })
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(updateUserDto)
   }
   @Post('login')
   @Public()
+  @ApiOperation({ summary: '登录' })
   login(@Body() loginUserDto: UpdateUserDto) {
     return this.userService.login(loginUserDto)
   }

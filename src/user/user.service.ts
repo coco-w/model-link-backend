@@ -45,14 +45,21 @@ export class UserService {
       select: {
         username: true,
         realname: true,
+        id: true,
       },
     })
     if (item) {
-      const payload = { username: item.username, realname: item.realname }
-      const user_token = await this.jwtService.signAsync(payload)
+      const payload = {
+        username: item.username,
+        realname: item.realname,
+        id: item.id,
+      }
+      const user_token = await this.jwtService.signAsync(payload, {
+        expiresIn: '7d',
+      })
       return {
-        user_token,
-        user_info: item,
+        token: `Bearer ${user_token}`,
+        userInfo: item,
       }
     }
     return new HttpException('账号或密码错误', 400)

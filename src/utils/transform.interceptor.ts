@@ -25,10 +25,22 @@ export class TransformInterceptor implements NestInterceptor {
             message: data,
           }
         }
+        if (context.getHandler().name === 'list') {
+          return {
+            result: {
+              records: data.result,
+              currentPage: data.page,
+              pageSize: data.limit,
+              total: data.count,
+            },
+            code: 200,
+            message: '请求成功',
+          }
+        }
         return {
-          data,
+          result: data,
           code: 200,
-          message: data.message || '请求成功',
+          message: '请求成功',
         }
       }),
     )

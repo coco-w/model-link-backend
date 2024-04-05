@@ -6,40 +6,49 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
+  Query,
 } from '@nestjs/common'
 import { GraphicItemService } from './graphic-item.service'
 import { CreateGraphicItemDto } from './dto/create-graphic-item.dto'
 import { UpdateGraphicItemDto } from './dto/update-graphic-item.dto'
+import {
+  ApiExtraModels,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger'
+import { ListPagination } from 'src/utils/pagination'
+import { ListGraphicItemDto } from './dto/list-graphic-item.dto'
 
+@ApiTags('图元配置')
 @Controller('graphic-item')
 export class GraphicItemController {
   constructor(private readonly graphicItemService: GraphicItemService) {}
 
   @Post()
-  create(@Body() createGraphicItemDto: CreateGraphicItemDto) {
-    return this.graphicItemService.create(createGraphicItemDto)
+  @ApiOperation({ summary: '创建' })
+  create(@Req() req, @Body() createGraphicItemDto: CreateGraphicItemDto) {
+    return this.graphicItemService.create(createGraphicItemDto, req.user.id)
   }
 
-  @Get()
-  findAll() {
-    return this.graphicItemService.findAll()
+  @Patch()
+  @ApiOperation({ summary: '更新' })
+  update(@Body() updateGraphicItemDto: UpdateGraphicItemDto) {
+    return this.graphicItemService.update(updateGraphicItemDto)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.graphicItemService.findOne(+id)
+  @Delete()
+  @ApiOperation({
+    summary: '删除',
+  })
+  remove(@Query('id') id: string) {
+    return this.graphicItemService.remove(id)
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateGraphicItemDto: UpdateGraphicItemDto,
-  ) {
-    return this.graphicItemService.update(+id, updateGraphicItemDto)
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.graphicItemService.remove(+id)
+  @Get('list')
+  @ApiOperation({ summary: '分页查询' })
+  list(@Query() param: ListGraphicItemDto) {
+    return this.graphicItemService.list(param)
   }
 }
