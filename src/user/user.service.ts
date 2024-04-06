@@ -17,8 +17,12 @@ export class UserService {
     })
     if (u) {
       return new HttpException('用户已存在', 400)
+    } else {
+      await this.prisma.user.create({
+        data: createUserDto,
+      })
+      return '注册成功'
     }
-    return '注册成功'
   }
 
   async update(data: UpdateUserDto) {
