@@ -7,18 +7,25 @@ import {
   Param,
   Delete,
   Req,
+  Query,
+  ParseBoolPipe,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common'
 import { FormEntityService } from './form-entity.service'
 import { CreateFormEntityDto } from './dto/create-form-entity.dto'
 import { UpdateFormEntityDto } from './dto/update-form-entity.dto'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ListPagination } from 'src/utils/pagination'
+import { ListFormEntityDto } from './dto/list-form-entity.dto'
 
 @Controller('form-entity')
 @ApiTags('表单配置')
 export class FormEntityController {
   constructor(private readonly formEntityService: FormEntityService) {}
 
-  @Post()
+  @Post('add')
+  @ApiOperation({ summary: '创建' })
   async create(@Body() createFormEntityDto: CreateFormEntityDto, @Req() req) {
     const id = await this.formEntityService.create(
       createFormEntityDto,
@@ -27,26 +34,21 @@ export class FormEntityController {
     return id
   }
 
-  @Get()
-  findAll() {
-    return this.formEntityService.findAll()
+  @Post('edit')
+  @ApiOperation({ summary: '编辑' })
+  update(@Body() updateFormEntityDto: UpdateFormEntityDto) {
+    return this.formEntityService.update(updateFormEntityDto)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.formEntityService.findOne(+id)
+  @Delete('delete')
+  @ApiOperation({ summary: '删除' })
+  remove(@Query('id') id: string) {
+    return this.formEntityService.remove(id)
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateFormEntityDto: UpdateFormEntityDto,
-  ) {
-    return this.formEntityService.update(+id, updateFormEntityDto)
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.formEntityService.remove(+id)
+  @Get('list')
+  @ApiOperation({ summary: '分页查询' })
+  list(@Query() param: ListFormEntityDto) {
+    return this.formEntityService.list(param)
   }
 }

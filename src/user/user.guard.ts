@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
@@ -16,27 +17,32 @@ export class AuthGuard implements CanActivate {
     private jwtService: JwtService,
     private reflector: Reflector,
   ) {}
-
+  logger = new Logger('AuthGuard')
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
     ])
+
     if (isPublic) {
-      // 💡 See this condition
+      this.logger.log(
+        '公开路由',
+        context.getClass().name,
+        context.getHandler().name,
+      )
       return true
     }
     const request = context.switchToHttp().getRequest()
+    this.logger.log('请求地址', request.url)
     const token = this.extractTokenFromHeader(request)
     if (!token) {
+      this.logger.error('未找到 token', token)
       throw new UnauthorizedException()
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       })
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
       request['user'] = payload
     } catch {
       throw new UnauthorizedException()

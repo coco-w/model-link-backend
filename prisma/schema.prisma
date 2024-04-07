@@ -67,7 +67,7 @@ model FormEntity {
   name      String
   judgment  Boolean? /// 判断是否有开始时间和结束时间(true/false)
   remark    String?
-  config    String     @db.Text
+  config    String?    @db.Text
   updatedAt DateTime   @updatedAt
   createdAt DateTime   @default(now())
   userId    String
