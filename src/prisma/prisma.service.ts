@@ -12,9 +12,9 @@ function extendPrismaClient() {
           const result = await query(args)
           const end = performance.now()
           const time = end - start
-          logger.debug(
-            `${model}.${operation} took ${time}ms ${JSON.stringify(args)}`,
-          )
+          logger.debug(`${model}.${operation} took ${time}ms`)
+          logger.debug(`Args: ${JSON.stringify(args)}`)
+          logger.debug(`Result: ${JSON.stringify(result)}`)
           return result
         },
       },
