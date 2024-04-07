@@ -17,6 +17,11 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "noUnusedLocals": false
+    "noUnusedLocals": false,
+    "paths": {
+      "src/*": [
+        "./src/*"
+      ]
+    },
   }
 }

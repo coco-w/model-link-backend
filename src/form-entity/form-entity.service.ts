@@ -15,15 +15,6 @@ export class FormEntityService {
     })
     return data.id
   }
-
-  findAll() {
-    return `This action returns all formEntity`
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} formEntity`
-  }
-
   async update(updateFormEntityDto: UpdateFormEntityDto) {
     const { id, ...data } = updateFormEntityDto
     await this.prisma.formEntity.update({

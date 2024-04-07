@@ -1,34 +1,49 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ViewItemService } from './view-item.service';
-import { CreateViewItemDto } from './dto/create-view-item.dto';
-import { UpdateViewItemDto } from './dto/update-view-item.dto';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Req,
+  Query,
+} from '@nestjs/common'
+import { ViewItemService } from './view-item.service'
+import { CreateViewItemDto } from './dto/create-view-item.dto'
+import { UpdateViewItemDto } from './dto/update-view-item.dto'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ListViewItemDto } from './dto/list-veiw-item.dto'
 
 @Controller('view-item')
+@ApiTags('视图')
 export class ViewItemController {
   constructor(private readonly viewItemService: ViewItemService) {}
-
-  @Post()
-  create(@Body() createViewItemDto: CreateViewItemDto) {
-    return this.viewItemService.create(createViewItemDto);
+  @ApiOperation({ summary: '创建' })
+  @Post('/add')
+  create(@Body() createViewItemDto: CreateViewItemDto, @Req() req) {
+    return this.viewItemService.create(createViewItemDto, req.user.id)
   }
 
-  @Get()
-  findAll() {
-    return this.viewItemService.findAll();
+  @Post('edit')
+  @ApiOperation({ summary: '更新' })
+  update(@Body() updateViewItemDto: UpdateViewItemDto) {
+    return this.viewItemService.update(updateViewItemDto)
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.viewItemService.findOne(+id);
+  @Delete('delete')
+  @ApiOperation({
+    summary: '删除',
+  })
+  remove(@Query('id') id: string) {
+    return this.viewItemService.remove(id)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateViewItemDto: UpdateViewItemDto) {
-    return this.viewItemService.update(+id, updateViewItemDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.viewItemService.remove(+id);
+  @Get('list')
+  @ApiOperation({
+    summary: '列表',
+  })
+  list(@Query() data: ListViewItemDto, @Req() req) {
+    return this.viewItemService.list(data, req.user.id)
   }
 }
