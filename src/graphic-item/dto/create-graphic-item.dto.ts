@@ -1,9 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty, IsOptional } from 'class-validator'
 
 export class CreateGraphicItemDto {
   @ApiProperty({ title: '名称', example: '圆形', required: false })
+  @IsNotEmpty({ message: '名称不能为空' })
   name: string
   @ApiProperty({ title: '结构', example: 'circle' })
+  @IsOptional()
   structure: string
   @ApiProperty({
     title: '配置',
@@ -26,5 +29,6 @@ export class CreateGraphicItemDto {
   @ApiProperty({ title: '显示的值', example: '' })
   value: string
   @ApiProperty({ enum: ['vertex', 'edge'] })
+  @IsNotEmpty({ message: '类型不能为空' })
   type: 'vertex' | 'edge'
 }
