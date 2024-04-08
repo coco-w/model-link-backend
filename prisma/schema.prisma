@@ -130,31 +130,30 @@ model FrameworkManagement {
 }
 
 model SourceModelTag {
-  id            String       @id @default(cuid())
-  name          String
-  updatedAt     DateTime     @updatedAt
-  createdAt     DateTime     @default(now())
-  userId        String
-  user          User         @relation(fields: [userId], references: [id])
-  SourceModel   SourceModel? @relation(fields: [sourceModelId], references: [id])
-  sourceModelId String?
+  id           String        @id @default(cuid())
+  name         String        @unique
+  updatedAt    DateTime      @updatedAt
+  createdAt    DateTime      @default(now())
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  SourceModels SourceModel[]
 }
 
 /// 元模型
 model SourceModel {
-  id            String           @id @default(cuid())
-  name          String
-  type          GraphicItem_type @default(vertex)
-  tags          SourceModelTag[]
-  /// 关联表单
-  formEntityId  String
-  formEntity    FormEntity       @relation(fields: [formEntityId], references: [id])
+  id   String           @id @default(cuid())
+  name String
+  type GraphicItem_type @default(vertex)
+  tags SourceModelTag[]
+
+  formEntity    FormEntity  @relation(fields: [formEntityId], references: [id])
   ///关联图元
   graphicItemId String
-  graphicItem   GraphicItem      @relation(fields: [graphicItemId], references: [id])
+  graphicItem   GraphicItem @relation(fields: [graphicItemId], references: [id])
 
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  formEntityId String
 }

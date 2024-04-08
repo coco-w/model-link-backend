@@ -4,16 +4,18 @@ import pagination from 'prisma-paginate'
 function extendPrismaClient() {
   const prisma = new PrismaClient()
   const logger = new Logger('Prisma')
+
   return prisma.$extends(pagination).$extends({
     query: {
       $allModels: {
         async $allOperations({ operation, model, args, query }) {
           const start = performance.now()
+          logger.debug(`Start: ${model}.${operation}`)
+          logger.debug(`Args: ${JSON.stringify(args)}`)
           const result = await query(args)
           const end = performance.now()
           const time = end - start
           logger.debug(`${model}.${operation} took ${time}ms`)
-          logger.debug(`Args: ${JSON.stringify(args)}`)
           logger.debug(`Result: ${JSON.stringify(result)}`)
           return result
         },
