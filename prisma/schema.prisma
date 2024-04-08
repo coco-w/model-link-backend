@@ -36,6 +36,8 @@ model User {
   FormEntity          FormEntity[]
   ViewItem            ViewItem[]
   FrameworkManagement FrameworkManagement[]
+  SourceModelTag      SourceModelTag[]
+  SourceModel         SourceModel[]
 }
 
 /// 图元设计
@@ -53,6 +55,7 @@ model GraphicItem {
   value         String?          @db.Text
   user          User             @relation(fields: [userId], references: [id])
   viewItems     ViewItem[]
+  SourceModel   SourceModel[]
 }
 
 enum GraphicItem_type {
@@ -62,16 +65,17 @@ enum GraphicItem_type {
 
 /// 表单设计
 model FormEntity {
-  id        String     @id @default(cuid())
-  name      String
-  judgment  Boolean? /// 判断是否有开始时间和结束时间(true/false)
-  remark    String?
-  config    String?    @db.Text
-  updatedAt DateTime   @updatedAt
-  createdAt DateTime   @default(now())
-  userId    String
-  user      User       @relation(fields: [userId], references: [id])
-  viewItems ViewItem[]
+  id          String        @id @default(cuid())
+  name        String
+  judgment    Boolean? /// 判断是否有开始时间和结束时间(true/false)
+  remark      String?
+  config      String?       @db.Text
+  updatedAt   DateTime      @updatedAt
+  createdAt   DateTime      @default(now())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  viewItems   ViewItem[]
+  SourceModel SourceModel[]
 }
 
 /// 视图设计
@@ -119,6 +123,36 @@ model FrameworkManagement {
   id        String   @id @default(cuid())
   name      String
   remark    String?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model SourceModelTag {
+  id            String       @id @default(cuid())
+  name          String
+  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime     @default(now())
+  userId        String
+  user          User         @relation(fields: [userId], references: [id])
+  SourceModel   SourceModel? @relation(fields: [sourceModelId], references: [id])
+  sourceModelId String?
+}
+
+/// 元模型
+model SourceModel {
+  id            String           @id @default(cuid())
+  name          String
+  type          GraphicItem_type @default(vertex)
+  tags          SourceModelTag[]
+  /// 关联表单
+  formEntityId  String
+  formEntity    FormEntity       @relation(fields: [formEntityId], references: [id])
+  ///关联图元
+  graphicItemId String
+  graphicItem   GraphicItem      @relation(fields: [graphicItemId], references: [id])
+
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
   userId    String

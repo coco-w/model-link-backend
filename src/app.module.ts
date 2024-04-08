@@ -6,6 +6,7 @@ import { AuthGuard } from './user/user.guard'
 import { ViewItemModule } from './view-item/view-item.module'
 import { FormEntityModule } from './form-entity/form-entity.module'
 import { FrameworkManagementModule } from './framework-management/framework-management.module'
+import { SourceModelTagModule } from './source-model-tag/source-model-tag.module'
 @Module({
   imports: [
     GraphicItemModule,
@@ -13,6 +14,7 @@ import { FrameworkManagementModule } from './framework-management/framework-mana
     ViewItemModule,
     FormEntityModule,
     FrameworkManagementModule,
+    SourceModelTagModule,
   ],
   controllers: [],
   providers: [
