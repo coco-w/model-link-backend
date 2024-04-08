@@ -24,17 +24,18 @@ datasource db {
 /// 用户
 model User {
   /// cuid() generates a unique ID
-  id          String        @id @default(cuid())
+  id                  String                @id @default(cuid())
   // 用户名称1
-  username    String        @unique() /// 用户名称
+  username            String                @unique() /// 用户名称
   /// 用户密码
-  password    String // 用户密码
-  realname    String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  GraphicItem GraphicItem[]
-  FormEntity  FormEntity[]
-  ViewItem    ViewItem[]
+  password            String // 用户密码
+  realname            String
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  GraphicItem         GraphicItem[]
+  FormEntity          FormEntity[]
+  ViewItem            ViewItem[]
+  FrameworkManagement FrameworkManagement[]
 }
 
 /// 图元设计
@@ -114,20 +115,12 @@ enum ViewItem_type {
   constraintView
 }
 
-// model ViewItemAndGraphicItem {
-//   viewItemId    String
-//   graphicItemId String
-//   viewItem      ViewItem    @relation(fields: [viewItemId], references: [id], onDelete: Cascade)
-//   graphicItem   GraphicItem @relation(fields: [graphicItemId], references: [id], onDelete: Cascade)
-
-//   @@id([viewItemId, graphicItemId])
-// }
-
-// model ViewItemAndFormEntity {
-//   viewItemId   String
-//   formEntityId String
-//   viewItem     ViewItem   @relation(fields: [viewItemId], references: [id], onDelete: Cascade)
-//   formEntity   FormEntity @relation(fields: [formEntityId], references: [id], onDelete: Cascade)
-
-//   @@id([viewItemId, formEntityId])
-// }
+model FrameworkManagement {
+  id        String   @id @default(cuid())
+  name      String
+  remark    String?
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}

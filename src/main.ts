@@ -28,6 +28,6 @@ async function bootstrap() {
     }),
   )
   app.enableCors()
-  await app.listen(8596)
+  await app.listen(3200)
 }
 bootstrap()

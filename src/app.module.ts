@@ -5,8 +5,15 @@ import { APP_GUARD } from '@nestjs/core'
 import { AuthGuard } from './user/user.guard'
 import { ViewItemModule } from './view-item/view-item.module'
 import { FormEntityModule } from './form-entity/form-entity.module'
+import { FrameworkManagementModule } from './framework-management/framework-management.module'
 @Module({
-  imports: [GraphicItemModule, UserModule, ViewItemModule, FormEntityModule],
+  imports: [
+    GraphicItemModule,
+    UserModule,
+    ViewItemModule,
+    FormEntityModule,
+    FrameworkManagementModule,
+  ],
   controllers: [],
   providers: [
     {
