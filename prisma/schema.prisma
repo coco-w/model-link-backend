@@ -38,6 +38,7 @@ model User {
   FrameworkManagement FrameworkManagement[]
   SourceModelTag      SourceModelTag[]
   SourceModel         SourceModel[]
+  SourceView          SourceView[]
 }
 
 /// 图元设计
@@ -90,6 +91,7 @@ model ViewItem {
   user         User          @relation(fields: [userId], references: [id])
   graphicItems GraphicItem[]
   formEntities FormEntity[]
+  SourceView   SourceView[]
 }
 
 enum ViewItem_type {
@@ -151,6 +153,22 @@ model SourceModel {
   ///关联图元
   graphicItemId String?
   graphicItem   GraphicItem? @relation(fields: [graphicItemId], references: [id])
+
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+///元视图
+model SourceView {
+  id            String   @id @default(cuid())
+  name          String
+  /// 隐形名称
+  recessiveName String
+  /// 设计器
+  viewId        String
+  view          ViewItem @relation(fields: [viewId], references: [id])
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())

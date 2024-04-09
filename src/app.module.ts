@@ -8,6 +8,7 @@ import { FormEntityModule } from './form-entity/form-entity.module'
 import { FrameworkManagementModule } from './framework-management/framework-management.module'
 import { SourceModelTagModule } from './source-model-tag/source-model-tag.module'
 import { SourceModelModule } from './source-model/source-model.module';
+import { SourceViewModule } from './source-view/source-view.module';
 @Module({
   imports: [
     GraphicItemModule,
@@ -17,6 +18,7 @@ import { SourceModelModule } from './source-model/source-model.module';
     FrameworkManagementModule,
     SourceModelTagModule,
     SourceModelModule,
+    SourceViewModule,
   ],
   controllers: [],
   providers: [
