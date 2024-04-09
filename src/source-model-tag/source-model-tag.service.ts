@@ -10,14 +10,12 @@ export class SourceModelTagService {
     createSourceModelTagDto: CreateSourceModelTagDto,
     userId: string,
   ) {
-    return (
-      await this.prisma.sourceModelTag.create({
-        data: {
-          ...createSourceModelTagDto,
-          userId,
-        },
-      })
-    ).id
+    return await this.prisma.sourceModelTag.create({
+      data: {
+        ...createSourceModelTagDto,
+        userId,
+      },
+    })
   }
 
   async update(updateSourceModelTagDto: UpdateSourceModelTagDto) {

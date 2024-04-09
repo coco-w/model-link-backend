@@ -146,14 +146,14 @@ model SourceModel {
   type GraphicItem_type @default(vertex)
   tags SourceModelTag[]
 
-  formEntity    FormEntity  @relation(fields: [formEntityId], references: [id])
+  formId        String?
+  formEntity    FormEntity?  @relation(fields: [formId], references: [id])
   ///关联图元
-  graphicItemId String
-  graphicItem   GraphicItem @relation(fields: [graphicItemId], references: [id])
+  graphicItemId String?
+  graphicItem   GraphicItem? @relation(fields: [graphicItemId], references: [id])
 
-  updatedAt    DateTime @updatedAt
-  createdAt    DateTime @default(now())
-  userId       String
-  user         User     @relation(fields: [userId], references: [id])
-  formEntityId String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }

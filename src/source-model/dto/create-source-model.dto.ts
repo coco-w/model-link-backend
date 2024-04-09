@@ -10,14 +10,19 @@ export class CreateSourceModelDto {
   @ApiProperty({ title: '类型', type: 'string' })
   @IsString({ message: '类型必须是字符串' })
   type: $Enums.GraphicItem_type
-  @Transform(({ value }) => value.split(',').map((tag) => ({ name: tag })))
+  @Transform(({ value }) =>
+    Array.isArray(value)
+      ? value
+      : value.length > 0
+        ? value.split(',').map((tag) => tag)
+        : [],
+  )
   @ApiProperty({ title: '标签', type: 'array', items: { type: 'object' } })
   @IsArray({ message: '标签必须是数组' })
-  tags: Prisma.SourceModelTagCreateInput[]
+  tags: string[]
   @ApiProperty({ title: '表单ID', type: 'string' })
   @IsString({ message: '表单ID必须是字符串' })
-  formEntityId: string
+  formId: string
   @ApiProperty({ title: '图形项', type: 'object' })
-  @IsObject({ message: '图形项必须是对象' })
-  graphicItem: Prisma.GraphicItemCreateInput
+  graphicItem?: Prisma.GraphicItemCreateInput
 }
