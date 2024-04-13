@@ -4,7 +4,6 @@ import { IsString } from 'class-validator'
 export class CreateSourceViewDto {
   @ApiProperty({
     title: '名称',
-    example: '元视图名称',
     type: String,
   })
   @IsString({
@@ -14,7 +13,6 @@ export class CreateSourceViewDto {
 
   @ApiProperty({
     title: '隐形名称',
-    example: '隐形名称',
     type: String,
   })
   @IsString({

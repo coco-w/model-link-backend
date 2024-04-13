@@ -16,7 +16,9 @@ function extendPrismaClient() {
           const end = performance.now()
           const time = end - start
           logger.debug(`${model}.${operation} took ${time}ms`)
-          logger.debug(`Result: ${JSON.stringify(result)}`)
+          if (operation !== 'findMany') {
+            logger.debug(`Result: ${JSON.stringify(result)}`)
+          }
           return result
         },
       },

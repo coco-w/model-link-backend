@@ -24,39 +24,41 @@ datasource db {
 /// 用户
 model User {
   /// cuid() generates a unique ID
-  id                  String                @id @default(cuid())
+  id                                String                              @id @default(cuid())
   // 用户名称1
-  username            String                @unique() /// 用户名称
+  username                          String                              @unique() /// 用户名称
   /// 用户密码
-  password            String // 用户密码
-  realname            String
-  createdAt           DateTime              @default(now())
-  updatedAt           DateTime              @updatedAt
-  GraphicItem         GraphicItem[]
-  FormEntity          FormEntity[]
-  ViewItem            ViewItem[]
-  FrameworkManagement FrameworkManagement[]
-  SourceModelTag      SourceModelTag[]
-  SourceModel         SourceModel[]
-  SourceView          SourceView[]
+  password                          String // 用户密码
+  realname                          String
+  createdAt                         DateTime                            @default(now())
+  updatedAt                         DateTime                            @updatedAt
+  GraphicItem                       GraphicItem[]
+  FormEntity                        FormEntity[]
+  ViewItem                          ViewItem[]
+  FrameworkManagement               FrameworkManagement[]
+  SourceModelTag                    SourceModelTag[]
+  SourceModel                       SourceModel[]
+  SourceView                        SourceView[]
+  graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
 }
 
 /// 图元设计
 model GraphicItem {
-  id            String           @id @default(cuid())
-  name          String
-  structure     String?
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
-  config        String           @db.Text
-  svgOneHundred String           @db.Text
-  svgTwenty     String           @db.Text
-  type          GraphicItem_type @default(vertex)
-  userId        String
-  value         String?          @db.Text
-  user          User             @relation(fields: [userId], references: [id])
-  viewItems     ViewItem[]
-  SourceModel   SourceModel[]
+  id                                String                              @id @default(cuid())
+  name                              String
+  structure                         String?
+  createdAt                         DateTime                            @default(now())
+  updatedAt                         DateTime                            @updatedAt
+  config                            String                              @db.Text
+  svgOneHundred                     String                              @db.Text
+  svgTwenty                         String                              @db.Text
+  type                              GraphicItem_type                    @default(vertex)
+  userId                            String
+  value                             String?                             @db.Text
+  user                              User                                @relation(fields: [userId], references: [id])
+  viewItems                         ViewItem[]
+  SourceModel                       SourceModel[]
+  graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
 }
 
 enum GraphicItem_type {
@@ -155,10 +157,14 @@ model SourceModel {
   graphicItemId String?
   graphicItem   GraphicItem? @relation(fields: [graphicItemId], references: [id])
 
-  updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  updatedAt                         DateTime                            @updatedAt
+  createdAt                         DateTime                            @default(now())
+  userId                            String
+  user                              User                                @relation(fields: [userId], references: [id])
+  SourceView                        SourceView?                         @relation(fields: [sourceViewId], references: [id])
+  sourceViewId                      String?
+  quoteDataSourceModel              SourceView[]                        @relation("quoteDataSourceModel")
+  graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
 }
 
 ///元视图
@@ -175,4 +181,26 @@ model SourceView {
   createdAt DateTime @default(now())
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  //元视图设计中结构图设计关系数据
+  //绑定元模型
+  sourceModels SourceModel[]
+  relationData graphicItemAndSourceModelRealtion[]
+  //引用元模型
+  quoteData    SourceModel[]                       @relation("quoteDataSourceModel")
+}
+
+/// 图元和元模型关系
+model graphicItemAndSourceModelRealtion {
+  id            String       @id @default(cuid())
+  graphicItemId String
+  graphicItem   GraphicItem? @relation(fields: [graphicItemId], references: [id])
+  sourceModelId String
+  sourceModel   SourceModel? @relation(fields: [sourceModelId], references: [id])
+  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime     @default(now())
+  user          User         @relation(fields: [userId], references: [id])
+  userId        String
+  sourceView    SourceView   @relation(fields: [sourceViewId], references: [id])
+  sourceViewId  String
 }

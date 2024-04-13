@@ -8,9 +8,7 @@ export class CreateFormEntityDto {
   @ApiProperty({ title: '是否启用包含startTime和endTime', example: true })
   @IsBoolean()
   @IsOptional()
-  @Transform(({ value }) =>
-    value === 'true' ? true : value === 'false' ? false : undefined,
-  )
+  @Transform(({ value }) => (typeof value === 'boolean' ? value : false))
   judgment?: boolean
   @ApiProperty({ title: '表单实体备注', example: '' })
   remark?: string

@@ -43,20 +43,15 @@ export class SourceViewController {
   ) {
     return this.sourceViewService.list(data)
   }
-  // @Get()
-  // findAll() {
-  //   return this.sourceViewService.findAll()
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.sourceViewService.findOne(+id)
-  // }
 
   @Post('edit')
   @ApiOperation({ summary: '编辑元视图' })
-  update(@Body() updateSourceViewDto: UpdateSourceViewDto) {
-    return this.sourceViewService.update(updateSourceViewDto)
+  update(
+    @Body(new ValidationPipe({ whitelist: true }))
+    updateSourceViewDto: UpdateSourceViewDto,
+    @Req() req: UserRequest,
+  ) {
+    return this.sourceViewService.update(updateSourceViewDto, req.user.id)
   }
 
   @Delete('delete')

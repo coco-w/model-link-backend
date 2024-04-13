@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "db:push": "prisma db push",
     "db:pull": "prisma db pull",
-    "db:g": "prisma generate && yarn lint",
+    "db:g": "prisma generate",
     "db:dev": "prisma migrate dev",
     "commit": "git-cz"
   },
