@@ -10,12 +10,12 @@ import { ListViewItemDto } from './dto/list-veiw-item.dto'
 export class ViewItemService {
   constructor(private prisma: PrismaService) {}
   async create(createViewItemDto: CreateViewItemDto, userId: string) {
-    const formIds = createViewItemDto.formId
+    const formId = createViewItemDto.formId
     delete createViewItemDto.formId
     if (createViewItemDto.formId && createViewItemDto.type === 'form') {
       return new HttpException('formId只能在form类型下使用', 400)
     }
-    if (createViewItemDto.type === 'form' && formIds.length === 0) {
+    if (createViewItemDto.type === 'form' && !formId) {
       return new HttpException('form类型下formId不能为空', 400)
     }
 
@@ -26,11 +26,7 @@ export class ViewItemService {
       data: {
         ...createViewItemDto,
         userId: userId,
-        formEntities: {
-          connect: formIds?.map((formId) => ({
-            id: formId,
-          })),
-        },
+        formId: formId,
         graphicItems: {
           connect: graphics?.map((graphic) => ({
             id: graphic,
@@ -43,9 +39,9 @@ export class ViewItemService {
   }
 
   update(updateViewItemDto: UpdateViewItemDto) {
-    const formIds = updateViewItemDto.formId
+    const formId = updateViewItemDto.formId
     delete updateViewItemDto.formId
-    if (updateViewItemDto.type === 'form' && formIds.length === 0) {
+    if (updateViewItemDto.type === 'form' && formId.length === 0) {
       return new HttpException('form类型下formId不能为空', 400)
     }
 
@@ -55,11 +51,7 @@ export class ViewItemService {
     return this.prisma.viewItem.update({
       data: {
         ...updateViewItemDto,
-        formEntities: {
-          set: formIds?.map((formId) => ({
-            id: formId,
-          })),
-        },
+        formId: formId,
         graphicItems: {
           set: graphics?.map((graphic) => ({
             id: graphic,
@@ -107,7 +99,7 @@ export class ViewItemService {
       where,
       include: {
         graphicItems: true,
-        formEntities: {
+        formEntity: {
           select: {
             id: true,
             name: true,
@@ -116,7 +108,6 @@ export class ViewItemService {
       },
     })
     list.result = list.result.map((item: any) => {
-      item.formId = item.formEntities.map((form) => form.id)
       item.graphics = item.graphicItems.map((graphic) => graphic.id)
       return item
     })

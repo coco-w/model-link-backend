@@ -90,7 +90,8 @@ model ViewItem {
   userId       String
   user         User          @relation(fields: [userId], references: [id])
   graphicItems GraphicItem[]
-  formEntities FormEntity[]
+  formId       String?
+  formEntity   FormEntity?   @relation(fields: [formId], references: [id])
   SourceView   SourceView[]
 }
 

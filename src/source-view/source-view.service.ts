@@ -41,7 +41,7 @@ export class SourceViewService {
         view: {
           include: {
             graphicItems: true,
-            formEntities: true,
+            formEntity: true,
           },
         },
       },

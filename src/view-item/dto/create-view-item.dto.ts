@@ -18,11 +18,9 @@ export class CreateViewItemDto {
   @IsString({ message: 'description必须为字符串' })
   @IsOptional()
   remark?: string
-  @ApiProperty({ description: '表单id', example: ['1', '2'] })
-  @IsArray()
+  @ApiProperty({ description: '表单id', example: '123' })
   @IsOptional()
-  @Transform(({ value }) => (isArray(value) ? value : []))
-  formId?: string[]
+  formId?: string
   @ApiProperty({ description: '模型id', example: '1,2,3' })
   // @IsString()
   @IsOptional()
