@@ -162,13 +162,13 @@ model SourceModel {
 
 ///元视图
 model SourceView {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   name          String
   /// 隐形名称
   recessiveName String
   /// 设计器
-  viewId        String
-  view          ViewItem @relation(fields: [viewId], references: [id])
+  viewId        String?
+  view          ViewItem? @relation(fields: [viewId], references: [id])
 
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())

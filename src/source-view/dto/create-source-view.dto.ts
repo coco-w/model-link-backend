@@ -21,4 +21,12 @@ export class CreateSourceViewDto {
     message: '隐形名称必须是字符串',
   })
   recessiveName: string
+  @ApiProperty({
+    title: '设计器ID',
+    type: String,
+  })
+  @IsString({
+    message: '设计器ID必须是字符串',
+  })
+  viewId: string
 }

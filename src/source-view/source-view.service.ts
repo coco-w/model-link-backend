@@ -1,26 +1,77 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, Injectable, Logger } from '@nestjs/common'
 import { CreateSourceViewDto } from './dto/create-source-view.dto'
 import { UpdateSourceViewDto } from './dto/update-source-view.dto'
+import { PrismaService } from 'src/prisma/prisma.service'
+import { tryit } from 'radash'
+import { ListSourceModelDto } from 'src/source-model/dto/list-source-model.dto'
+import { ListSourceView } from './dto/list-source-view.dto'
 
 @Injectable()
 export class SourceViewService {
-  create(createSourceViewDto: CreateSourceViewDto) {
-    return 'This action adds a new sourceView'
+  constructor(private prisma: PrismaService) {}
+  create(createSourceViewDto: CreateSourceViewDto, userId: string) {
+    return this.prisma.sourceView.create({
+      data: {
+        ...createSourceViewDto,
+        userId,
+      },
+    })
   }
 
-  findAll() {
-    return `This action returns all sourceView`
+  async list(data: ListSourceView) {
+    const { pageNo, pageSize, viewId, name, recessiveName, ...rest } = data
+    return this.prisma.sourceView.paginate({
+      limit: pageSize,
+      page: pageNo,
+      where: {
+        ...rest,
+        name: {
+          contains: name,
+        },
+        recessiveName: {
+          contains: recessiveName,
+        },
+        viewId: viewId
+          ? {
+              equals: viewId,
+            }
+          : undefined,
+      },
+      include: {
+        view: {
+          include: {
+            graphicItems: true,
+            formEntities: true,
+          },
+        },
+      },
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} sourceView`
+  async update(updateSourceViewDto: UpdateSourceViewDto) {
+    const [err, _data] = await tryit(this.prisma.sourceView.update)({
+      where: {
+        id: updateSourceViewDto.id,
+      },
+      data: updateSourceViewDto,
+    })
+    if (err) {
+      Logger.error(err)
+      return new HttpException('更新失败', 400)
+    }
+    return '更新成功'
   }
 
-  update(id: number, updateSourceViewDto: UpdateSourceViewDto) {
-    return `This action updates a #${id} sourceView`
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} sourceView`
+  async remove(id: string) {
+    const [err, _data] = await tryit(this.prisma.sourceView.delete)({
+      where: {
+        id,
+      },
+    })
+    if (err) {
+      Logger.error(err)
+      return new HttpException('删除失败', 400)
+    }
+    return `删除成功`
   }
 }
