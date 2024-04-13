@@ -16,6 +16,7 @@ import { UpdateSourceViewDto } from './dto/update-source-view.dto'
 import { ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
 import { UserRequest } from 'src/utils/type'
 import { ListSourceView } from './dto/list-source-view.dto'
+import { $Enums } from '@prisma/client'
 
 @Controller('source-view')
 @ApiTags('元视图')

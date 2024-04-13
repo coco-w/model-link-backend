@@ -165,6 +165,7 @@ model SourceModel {
   sourceViewId                      String?
   quoteDataSourceModel              SourceView[]                        @relation("quoteDataSourceModel")
   graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
+  ganttSourceViewRelation           SourceView[]                        @relation("ganttSourceViewRelation")
 }
 
 ///元视图
@@ -184,10 +185,12 @@ model SourceView {
 
   //元视图设计中结构图设计关系数据
   //绑定元模型
-  sourceModels SourceModel[]
-  relationData graphicItemAndSourceModelRealtion[]
+  sourceModels            SourceModel[]
+  relationData            graphicItemAndSourceModelRealtion[]
   //引用元模型
-  quoteData    SourceModel[]                       @relation("quoteDataSourceModel")
+  quoteData               SourceModel[]                       @relation("quoteDataSourceModel")
+  //甘特图
+  ganttSourceViewRelation SourceModel[]                       @relation("ganttSourceViewRelation")
 }
 
 /// 图元和元模型关系
@@ -204,3 +207,5 @@ model graphicItemAndSourceModelRealtion {
   sourceView    SourceView   @relation(fields: [sourceViewId], references: [id])
   sourceViewId  String
 }
+
+/// 甘特图视图绑定元模型

@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { tryit } from 'radash'
 import { ListSourceModelDto } from 'src/source-model/dto/list-source-model.dto'
 import { ListSourceView } from './dto/list-source-view.dto'
+import { ViewAdditionalDataKey } from './entities/source-view.entity'
 
 @Injectable()
 export class SourceViewService {
@@ -52,6 +53,7 @@ export class SourceViewService {
         },
         quoteData: true,
         sourceModels: true,
+        ganttSourceViewRelation: true,
       },
     })
     pageData.result.forEach((ele) => {
@@ -63,16 +65,39 @@ export class SourceViewService {
   async update(updateSourceViewDto: UpdateSourceViewDto, userId: string) {
     const existingSourceView = await this.prisma.sourceView.findUnique({
       where: { id: updateSourceViewDto.id },
+      include: {
+        view: true,
+      },
     })
     if (
       updateSourceViewDto.viewId &&
-      existingSourceView.viewId !== updateSourceViewDto.viewId
+      existingSourceView.view.id !== updateSourceViewDto.viewId
     ) {
-      // 如果 viewId 改变了，清空 sourceModels、relationData 和 quoteData
-      updateSourceViewDto.sourceModels = []
-      updateSourceViewDto.relationData = []
-      updateSourceViewDto.quoteData = []
+      for (const key in updateSourceViewDto) {
+        if (Object.prototype.hasOwnProperty.call(updateSourceViewDto, key)) {
+          if (allKeys.includes(key)) {
+            updateSourceViewDto[key] = []
+          }
+        }
+      }
     }
+    // 如果 viewId 改变了，无关属性
+    // for (const key in updateSourceViewDto) {
+    //   if (Object.prototype.hasOwnProperty.call(updateSourceViewDto, key)) {
+    //     const element = updateSourceViewDto[key]
+    //     if (
+    //       allKeys.includes(key) &&
+    //       !viewAdditionalDataKey[existingSourceView.view.type].includes(key)
+    //     ) {
+    //       updateSourceViewDto[key] = []
+    //     }
+    //   }
+    // }
+    allKeys.forEach((ele) => {
+      if (!viewAdditionalDataKey[existingSourceView.view.type].includes(ele)) {
+        updateSourceViewDto[ele] = []
+      }
+    })
     const { sourceModels, quoteData, relationData, ...rest } =
       updateSourceViewDto
     const [err, _data] = await tryit(this.prisma.sourceView.update)({
@@ -91,16 +116,11 @@ export class SourceViewService {
             id: quote,
           })),
         },
-        // sourceModels: {
-        //   set: sourceModels.map((sourceModel) => ({
-        //     id: sourceModel,
-        //   })),
-        // },
-        // quoteData: {
-        //   set: quoteData.map((quote) => ({
-        //     id: quote,
-        //   })),
-        // },
+        ganttSourceViewRelation: {
+          set: updateSourceViewDto.ganttSourceViewRelation.map((gantt) => ({
+            id: gantt,
+          })),
+        },
       },
     })
     if (relationData) {
@@ -186,3 +206,24 @@ export class SourceViewService {
     return `删除成功`
   }
 }
+
+const viewAdditionalDataKey: ViewAdditionalDataKey = {
+  graph: ['sourceModels', 'quoteData', 'relationData'],
+  form: [],
+  gantt: ['ganttSourceViewRelation'],
+  matrix: [],
+  matrixInput: [],
+  interactiveMatrix: [],
+  measurement: [],
+  sourceModelTable: [],
+  sourceTaskView: [],
+  conceptual: [],
+  richTextEditor: [],
+  constraintView: [],
+}
+const allKeys = [
+  'sourceModels',
+  'quoteData',
+  'relationData',
+  'ganttSourceViewRelation',
+]

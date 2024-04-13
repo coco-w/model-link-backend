@@ -44,4 +44,12 @@ export class UpdateSourceViewDto extends PartialType(CreateSourceViewDto) {
   @IsOptional()
   @IsArray()
   quoteData: string[]
+
+  @ApiProperty({
+    title: '甘特图元模型',
+    type: () => [String],
+  })
+  @IsOptional()
+  @IsArray()
+  ganttSourceViewRelation: string[]
 }

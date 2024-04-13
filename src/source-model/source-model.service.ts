@@ -119,4 +119,14 @@ export class SourceModelService {
       },
     })
   }
+
+  getDateRageSourceModel() {
+    return this.prisma.sourceModel.findMany({
+      where: {
+        formEntity: {
+          judgment: true,
+        },
+      },
+    })
+  }
 }

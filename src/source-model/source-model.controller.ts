@@ -63,4 +63,10 @@ export class SourceModelController {
   queryById(@Query('id') id: string) {
     return this.sourceModelService.queryById(id)
   }
+
+  @Get('dateRage')
+  @ApiOperation({ summary: '查询表单带有日期选择器的元模型' })
+  getDateRageSourceModel() {
+    return this.sourceModelService.getDateRageSourceModel()
+  }
 }
