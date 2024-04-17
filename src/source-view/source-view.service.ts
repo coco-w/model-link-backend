@@ -6,6 +6,7 @@ import { tryit } from 'radash'
 import { ListSourceModelDto } from 'src/source-model/dto/list-source-model.dto'
 import { ListSourceView } from './dto/list-source-view.dto'
 import { ViewAdditionalDataKey } from './entities/source-view.entity'
+import { Prisma } from '@prisma/client'
 
 @Injectable()
 export class SourceViewService {
@@ -54,6 +55,9 @@ export class SourceViewService {
         quoteData: true,
         sourceModels: true,
         ganttSourceViewRelation: true,
+        xSourceModel: true,
+        ySourceModel: true,
+        measurementRelation: true,
       },
     })
     pageData.result.forEach((ele) => {
@@ -81,48 +85,68 @@ export class SourceViewService {
         }
       }
     }
-    // 如果 viewId 改变了，无关属性
-    // for (const key in updateSourceViewDto) {
-    //   if (Object.prototype.hasOwnProperty.call(updateSourceViewDto, key)) {
-    //     const element = updateSourceViewDto[key]
-    //     if (
-    //       allKeys.includes(key) &&
-    //       !viewAdditionalDataKey[existingSourceView.view.type].includes(key)
-    //     ) {
-    //       updateSourceViewDto[key] = []
-    //     }
-    //   }
-    // }
     allKeys.forEach((ele) => {
       if (!viewAdditionalDataKey[existingSourceView.view.type].includes(ele)) {
         updateSourceViewDto[ele] = []
       }
     })
-    const { sourceModels, quoteData, relationData, ...rest } =
-      updateSourceViewDto
-    const [err, _data] = await tryit(this.prisma.sourceView.update)({
+    const {
+      sourceModels,
+      quoteData,
+      relationData,
+      xSourceModel,
+      ySourceModel,
+      ganttSourceViewRelation,
+      measurementRelationId,
+      ...rest
+    } = updateSourceViewDto
+    const updateData: Prisma.XOR<
+      Prisma.SourceViewUpdateInput,
+      Prisma.SourceViewUncheckedUpdateInput
+    > = {
+      ...rest,
+    }
+    // if (existingSourceView.view.type === 'graph') {
+    updateData.sourceModels = {
+      set: sourceModels.map((sourceModel) => ({
+        id: sourceModel,
+      })),
+    }
+    updateData.quoteData = {
+      set: quoteData.map((quote) => ({
+        id: quote,
+      })),
+    }
+    // } else if (existingSourceView.view.type === 'gantt') {
+    updateData.ganttSourceViewRelation = {
+      set: ganttSourceViewRelation.map((gantt) => ({
+        id: gantt,
+      })),
+    }
+    // } else if (existingSourceView.view.type === 'matrix') {
+    updateData.xSourceModel = {
+      set: xSourceModel.map((x) => ({
+        id: x,
+      })),
+    }
+    updateData.ySourceModel = {
+      set: ySourceModel.map((y) => ({
+        id: y,
+      })),
+    }
+    // }
+    updateData.measurementId = {
+      set: measurementRelationId ? measurementRelationId : null,
+    }
+    await this.prisma.sourceView.update({
       where: {
         id: updateSourceViewDto.id,
       },
       data: {
-        ...rest,
-        sourceModels: {
-          set: sourceModels.map((sourceModel) => ({
-            id: sourceModel,
-          })),
-        },
-        quoteData: {
-          set: quoteData.map((quote) => ({
-            id: quote,
-          })),
-        },
-        ganttSourceViewRelation: {
-          set: updateSourceViewDto.ganttSourceViewRelation.map((gantt) => ({
-            id: gantt,
-          })),
-        },
+        ...updateData,
       },
     })
+
     if (relationData) {
       if (relationData.length === 0) {
         await this.prisma.graphicItemAndSourceModelRealtion.deleteMany({
@@ -186,10 +210,7 @@ export class SourceViewService {
         await this.prisma.$transaction(operations)
       }
     }
-    if (err) {
-      Logger.error(err)
-      return new HttpException('更新失败', 400)
-    }
+
     return '更新成功'
   }
 
@@ -211,9 +232,9 @@ const viewAdditionalDataKey: ViewAdditionalDataKey = {
   graph: ['sourceModels', 'quoteData', 'relationData'],
   form: [],
   gantt: ['ganttSourceViewRelation'],
-  matrix: [],
-  matrixInput: [],
-  interactiveMatrix: [],
+  matrix: ['xSourceModel', 'ySourceModel'],
+  matrixInput: ['xSourceModel', 'ySourceModel'],
+  interactiveMatrix: ['xSourceModel', 'ySourceModel'],
   measurement: [],
   sourceModelTable: [],
   sourceTaskView: [],
@@ -226,4 +247,6 @@ const allKeys = [
   'quoteData',
   'relationData',
   'ganttSourceViewRelation',
+  'xSourceModel',
+  'ySourceModel',
 ]

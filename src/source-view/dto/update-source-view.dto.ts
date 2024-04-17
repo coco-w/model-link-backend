@@ -8,6 +8,13 @@ export class CreateGraphicItemAndSourceModelRealtionDto {
   id?: string
 }
 
+export class CreateMatrixViewDataDto {
+  xSourceModelId: string[]
+  ySourceModelId: string[]
+  sourceViewId: string
+  id?: string
+}
+
 export class UpdateSourceViewDto extends PartialType(CreateSourceViewDto) {
   @ApiProperty({
     title: 'ID',
@@ -52,4 +59,26 @@ export class UpdateSourceViewDto extends PartialType(CreateSourceViewDto) {
   @IsOptional()
   @IsArray()
   ganttSourceViewRelation: string[]
+
+  @ApiProperty({
+    title: '矩阵x轴元模型',
+    type: () => [String],
+  })
+  @IsOptional()
+  @IsArray()
+  xSourceModel: string[]
+  @ApiProperty({
+    title: '矩阵y轴元模型',
+    type: () => [String],
+  })
+  @IsOptional()
+  @IsArray()
+  ySourceModel: string[]
+
+  @ApiProperty({
+    title: '度量视图元模型id',
+    type: () => String,
+  })
+  @IsOptional()
+  measurementRelationId: string
 }
