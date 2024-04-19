@@ -9,6 +9,7 @@ import { FrameworkManagementModule } from './framework-management/framework-mana
 import { SourceModelTagModule } from './source-model-tag/source-model-tag.module'
 import { SourceModelModule } from './source-model/source-model.module'
 import { SourceViewModule } from './source-view/source-view.module'
+import { SourceAngleViewModule } from './source-angle-view/source-angle-view.module'
 @Module({
   imports: [
     GraphicItemModule,
@@ -19,6 +20,7 @@ import { SourceViewModule } from './source-view/source-view.module'
     SourceModelTagModule,
     SourceModelModule,
     SourceViewModule,
+    SourceAngleViewModule,
   ],
   controllers: [],
   providers: [
