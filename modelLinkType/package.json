@@ -1,0 +1,25 @@
+{
+  "name": "modellinktype",
+  "version": "1.0.4",
+  "description": "model link 前后端项目共用的ts定义文件",
+  "main": "index.js",
+  "types": "default.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "require": {
+        "types": "./default.d.ts"
+      },
+      "import": {
+        "types": "./default.d.ts"
+      },
+      "default": "./index.js"
+    },
+    "./*": "./*"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
