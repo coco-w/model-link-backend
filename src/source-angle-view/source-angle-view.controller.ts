@@ -15,6 +15,7 @@ import { CreateSourceAngleViewDto } from './dto/create-source-angle-view.dto'
 import { UpdateSourceAngleViewDto } from './dto/update-source-angle-view.dto'
 import { UserRequest } from 'src/utils/type'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { UpdateOrderDto } from './dto/update-order.dto'
 
 @Controller('source-angle-view')
 @ApiTags('元视角')
@@ -51,8 +52,14 @@ export class SourceAngleViewController {
   }
 
   @Delete('/delete')
-  @ApiOperation({ summary: '编辑元视角' })
+  @ApiOperation({ summary: '删除元视角' })
   remove(@Query('id') id: string) {
     return this.sourceAngleViewService.remove(id)
+  }
+
+  @Post('/adjustOrder')
+  @ApiOperation({ summary: '调整元视角顺序' })
+  adjustOrder(@Body() data: UpdateOrderDto) {
+    return this.sourceAngleViewService.adjustOrder(data)
   }
 }
