@@ -4,7 +4,7 @@ import { UpdateFrameworkManagementDto } from './dto/update-framework-management.
 import { PrismaService } from 'src/prisma/prisma.service'
 import { ListFrameworkManagementDto } from './dto/list-framework-management.dto'
 import { RelationItem } from './dto/relation.dto'
-import { Prisma } from '@prisma/client'
+import { Prisma, SourceAngleView as BaseSourceAngleView } from '@prisma/client'
 type SourceAngleView = Prisma.SourceAngleViewGetPayload<{
   include: {
     sourceView: {
@@ -213,6 +213,34 @@ export class FrameworkManagementService {
         await this.deepRelation(nextData, sourceAngle, sourceData)
       }
       parent.children.push(sourceAngle)
+    })
+  }
+
+  async copy(source: string, target: string) {
+    const sourceData = await this.prisma.sourceAngleView.findMany({
+      where: {
+        frameworkId: source,
+      },
+    })
+    sourceData.forEach(async (ele) => {
+      await this.deepCopy(ele, target)
+    })
+  }
+  async deepCopy(data: BaseSourceAngleView, target: string, pid?: string) {
+    const copyData = await this.prisma.sourceAngleView.create({
+      data: {
+        ...data,
+        frameworkId: target,
+        pid: pid ? pid : null,
+      },
+    })
+    const nextData = await this.prisma.sourceAngleView.findMany({
+      where: {
+        pid: data.id,
+      },
+    })
+    nextData.forEach(async (ele) => {
+      await this.deepCopy(ele, target, copyData.id)
     })
   }
 }

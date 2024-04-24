@@ -62,4 +62,13 @@ export class FrameworkManagementController {
   getRelation(@Query('id') id: string) {
     return this.frameworkManagementService.getRelation(id)
   }
+
+  @Get('copy')
+  @ApiOperation({ summary: '复制框架' })
+  copy(
+    @Query('sourceId') sourceId: string,
+    @Query('targetId') targetId: string,
+  ) {
+    return this.frameworkManagementService.copy(sourceId, targetId)
+  }
 }
