@@ -58,15 +58,6 @@ export class SourceAngleViewService {
     }
     return result
   }
-
-  findAll() {
-    return `This action returns all sourceAngleView`
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} sourceAngleView`
-  }
-
   async update(updateSourceAngleViewDto: UpdateSourceAngleViewDto) {
     await this.prisma.sourceAngleView.update({
       data: updateSourceAngleViewDto,

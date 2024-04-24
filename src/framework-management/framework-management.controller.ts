@@ -56,4 +56,10 @@ export class FrameworkManagementController {
   list(@Query() data: ListFrameworkManagementDto) {
     return this.frameworkManagementService.list(data)
   }
+
+  @Get('relation')
+  @ApiOperation({ summary: '获取框架关联关系' })
+  getRelation(@Query('id') id: string) {
+    return this.frameworkManagementService.getRelation(id)
+  }
 }

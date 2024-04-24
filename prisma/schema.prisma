@@ -134,7 +134,7 @@ model FrameworkManagement {
   createdAt       DateTime          @default(now())
   userId          String
   user            User              @relation(fields: [userId], references: [id])
-  SourceAngleView SourceAngleView[]
+  sourceAngleView SourceAngleView[]
 }
 
 model SourceModelTag {
@@ -203,7 +203,7 @@ model SourceView {
   //度量视图
   measurementId           String?
   measurementRelation     SourceModel?                        @relation(fields: [measurementId], references: [id], name: "measurement")
-  SourceAngleView         SourceAngleView[]
+  sourceAngleView         SourceAngleView[]
 }
 
 /// 图元和元模型关系
