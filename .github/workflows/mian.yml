@@ -1,10 +1,31 @@
 on: push
-name: CI
+name: 打包nodejs部署
 jobs:
   build:
+    name: 打包nodejs部署
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: yarn
-      - run: yarn db:g
-      - run: yarn build
+
+      - name: 安装依赖
+        run: yarn
+
+      - name: prisma生成文件
+        run: yarn db:g
+
+      - name: 打包
+        run: yarn build
+
+      - name: Deploy to Server # 执行部署任务
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          user: ${{ secrets.SERVER_USER }}
+          pass: ${{ secrets.SERVER_PASS }}
+          scp: |
+            ./* => ~/model-link-backend
+          # 完成拷贝后在部署服务器执行的命令：进入项目目录，安装生产依赖，并使用 pm2 管理
+          # last_ssh: |
+          #   cd /www/github-actions-express
+          #   pnpm i --prod
+          #   pm2 reload app.config.js
