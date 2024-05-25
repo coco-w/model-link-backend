@@ -47,9 +47,8 @@ export class SourceAngleViewService {
       },
     })
     const treeData = this.deepTree(data, null)
-    console.log(treeData)
+
     return treeData
-    // console.log(data)
   }
   deepTree(data: any, pid: string | null) {
     const result = []

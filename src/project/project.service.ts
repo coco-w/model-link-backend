@@ -3,10 +3,14 @@ import { CreateProjectDto } from './dto/create-project.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { listProjectDto } from './dto/list-project.dto'
+import { SourceAngleViewService } from 'src/source-angle-view/source-angle-view.service'
 
 @Injectable()
 export class ProjectService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private sourceAngleView: SourceAngleViewService,
+  ) {}
   async create(createProjectDto: CreateProjectDto, userId: string) {
     const data = await this.prisma.project.create({
       data: {
@@ -21,8 +25,19 @@ export class ProjectService {
     return `This action returns all project`
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} project`
+  async findOne(id: string) {
+    const projectItem = await this.prisma.project.findUnique({
+      where: {
+        id,
+      },
+    })
+    const treeData = await this.sourceAngleView.treeList(
+      projectItem.frameworkManagementId,
+    )
+    return {
+      ...projectItem,
+      treeData,
+    }
   }
 
   update(id: number, updateProjectDto: UpdateProjectDto) {
@@ -47,6 +62,15 @@ export class ProjectService {
         user: true,
       },
     })
+    const modifiedResult = {
+      ...result,
+      result: result.result.map((item) => ({
+        ...item,
+        user: item.user.username,
+      })),
+    }
+
+    return modifiedResult
     return result
   }
 }

@@ -49,4 +49,10 @@ export class ProjectController {
   remove(@Param('id') id: string) {
     return this.projectService.remove(+id)
   }
+
+  @ApiOperation({ summary: '获取项目详情' })
+  @Get('queryById')
+  findOne(@Query('id') id: string) {
+    return this.projectService.findOne(id)
+  }
 }
