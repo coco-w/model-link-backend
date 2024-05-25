@@ -41,6 +41,7 @@ model User {
   SourceView                        SourceView[]
   graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
   SourceAngleView                   SourceAngleView[]
+  Project                           Project[]
 }
 
 /// 图元设计
@@ -135,6 +136,7 @@ model FrameworkManagement {
   userId          String
   user            User              @relation(fields: [userId], references: [id])
   sourceAngleView SourceAngleView[]
+  Project         Project[]
 }
 
 model SourceModelTag {
@@ -249,4 +251,19 @@ model SourceAngleView {
   ///元模型id
   sourceModelId String?
   sourceModel   SourceModel? @relation(fields: [sourceModelId], references: [id])
+}
+
+/// 项目
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  frameworkManagementId String
+  frameworkManagement   FrameworkManagement @relation(fields: [frameworkManagementId], references: [id])
+
+  remark String?
 }

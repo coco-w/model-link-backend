@@ -10,6 +10,7 @@ import { SourceModelTagModule } from './source-model-tag/source-model-tag.module
 import { SourceModelModule } from './source-model/source-model.module'
 import { SourceViewModule } from './source-view/source-view.module'
 import { SourceAngleViewModule } from './source-angle-view/source-angle-view.module'
+import { ProjectModule } from './project/project.module';
 @Module({
   imports: [
     GraphicItemModule,
@@ -21,6 +22,7 @@ import { SourceAngleViewModule } from './source-angle-view/source-angle-view.mod
     SourceModelModule,
     SourceViewModule,
     SourceAngleViewModule,
+    ProjectModule,
   ],
   controllers: [],
   providers: [
