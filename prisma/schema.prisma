@@ -42,6 +42,7 @@ model User {
   graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
   SourceAngleView                   SourceAngleView[]
   Project                           Project[]
+  ProjectViewItem                   ProjectViewItem[]
 }
 
 /// 图元设计
@@ -206,6 +207,7 @@ model SourceView {
   measurementId           String?
   measurementRelation     SourceModel?                        @relation(fields: [measurementId], references: [id], name: "measurement")
   sourceAngleView         SourceAngleView[]
+  ProjectViewItem         ProjectViewItem[]
 }
 
 /// 图元和元模型关系
@@ -242,15 +244,16 @@ model SourceAngleView {
   /// 是否是文件夹
   isLeaf   Boolean           @default(false)
 
-  sourceViewId  String?
-  sourceView    SourceView?  @relation(fields: [sourceViewId], references: [id])
+  sourceViewId    String?
+  sourceView      SourceView?       @relation(fields: [sourceViewId], references: [id])
   /// true: 创建一个，false:无限个
-  limit         Boolean      @default(false)
+  limit           Boolean           @default(false)
   ///序号
-  sort          Int
+  sort            Int
   ///元模型id
-  sourceModelId String?
-  sourceModel   SourceModel? @relation(fields: [sourceModelId], references: [id])
+  sourceModelId   String?
+  sourceModel     SourceModel?      @relation(fields: [sourceModelId], references: [id])
+  ProjectViewItem ProjectViewItem[]
 }
 
 /// 项目
@@ -265,5 +268,25 @@ model Project {
   frameworkManagementId String
   frameworkManagement   FrameworkManagement @relation(fields: [frameworkManagementId], references: [id])
 
-  remark String?
+  remark          String?
+  ProjectViewItem ProjectViewItem[]
+}
+
+//项目中的视图实例
+model ProjectViewItem {
+  id        String   @id @default(cuid())
+  name      String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  sourceViewId String
+  sourceView   SourceView @relation(fields: [sourceViewId], references: [id])
+
+  sourceAngleViewId String
+  sourceAngleView   SourceAngleView @relation(fields: [sourceAngleViewId], references: [id])
 }

@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
       return true
     }
     const request = context.switchToHttp().getRequest()
-    this.logger.log('请求地址', request.url)
+    this.logger.log('请求地址', request.method + ': ' + request.url)
     const token = this.extractTokenFromHeader(request)
     if (!token) {
       this.logger.error('未找到 token', token)

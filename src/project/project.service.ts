@@ -4,6 +4,8 @@ import { UpdateProjectDto } from './dto/update-project.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { listProjectDto } from './dto/list-project.dto'
 import { SourceAngleViewService } from 'src/source-angle-view/source-angle-view.service'
+import { SourceAngleViewTree } from 'src/source-angle-view/entities/source-angle-view.entity'
+import { ProjectViewItem } from 'modelLinkType'
 
 @Injectable()
 export class ProjectService {
@@ -34,9 +36,31 @@ export class ProjectService {
     const treeData = await this.sourceAngleView.treeList(
       projectItem.frameworkManagementId,
     )
+    const projectViewItems = await this.prisma.projectViewItem.findMany({
+      where: {
+        projectId: id,
+      },
+    })
+    this.deepTree(treeData, projectViewItems)
     return {
       ...projectItem,
       treeData,
+    }
+  }
+
+  deepTree(data: SourceAngleViewTree[], projectViewItems: ProjectViewItem[]) {
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i]
+
+      if (item.children && item.children.length > 0) {
+        this.deepTree(item.children as SourceAngleViewTree[], projectViewItems)
+      }
+      const filterData = projectViewItems.filter(
+        (projectViewItem) => projectViewItem.sourceAngleViewId === item.id,
+      )
+      item.children
+        ? item.children.concat(filterData)
+        : (item.children = filterData)
     }
   }
 

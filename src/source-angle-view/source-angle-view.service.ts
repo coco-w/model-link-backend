@@ -3,6 +3,7 @@ import { CreateSourceAngleViewDto } from './dto/create-source-angle-view.dto'
 import { UpdateSourceAngleViewDto } from './dto/update-source-angle-view.dto'
 import { PrismaService } from 'src/prisma/prisma.service'
 import { UpdateOrderDto } from './dto/update-order.dto'
+import { SourceAngleViewTree } from './entities/source-angle-view.entity'
 
 @Injectable()
 export class SourceAngleViewService {
@@ -38,20 +39,21 @@ export class SourceAngleViewService {
   }
 
   async treeList(frameworkId: string) {
-    const data = await this.prisma.sourceAngleView.findMany({
-      where: {
-        frameworkId,
-      },
-      orderBy: {
-        sort: 'asc',
-      },
-    })
+    const data: SourceAngleViewTree[] =
+      await this.prisma.sourceAngleView.findMany({
+        where: {
+          frameworkId,
+        },
+        orderBy: {
+          sort: 'asc',
+        },
+      })
     const treeData = this.deepTree(data, null)
 
     return treeData
   }
-  deepTree(data: any, pid: string | null) {
-    const result = []
+  deepTree(data: SourceAngleViewTree[], pid: string | null) {
+    const result: SourceAngleViewTree[] = []
     for (let i = 0; i < data.length; i++) {
       if (data[i].pid === pid) {
         const children = this.deepTree(data, data[i].id)
