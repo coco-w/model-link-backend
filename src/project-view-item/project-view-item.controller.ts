@@ -13,13 +13,34 @@ import {
 import { ProjectViewItemService } from './project-view-item.service'
 import { CreateProjectViewItemDto } from './dto/create-project-view-item.dto'
 import { UpdateProjectViewItemDto } from './dto/update-project-view-item.dto'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiExtraModels,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger'
 import { ListViewItemDto } from 'src/view-item/dto/list-veiw-item.dto'
 import { UserRequest } from 'src/utils/type'
 import { listProjectViewItemDto } from './dto/list-project-view-item.dto'
+import { ProjectViewItemDetailDto } from './dto/project-view-item-detail.dto'
+import { ListPaginationResponseDto } from 'src/utils/pagination'
+import { ApiPaginatedResponse } from 'src/decorator/api-paginated-response.decorator'
+import {
+  PaginatedDto,
+  ResponseListDto,
+  ResponseObjDto,
+  ResponsePaginatedDto,
+} from 'src/utils/content.dto'
 
 @ApiTags('项目视图item')
 @Controller('project-view-item')
+@ApiExtraModels(
+  PaginatedDto,
+  ProjectViewItemDetailDto,
+  ResponseObjDto,
+  ResponseListDto,
+  ResponsePaginatedDto,
+)
 export class ProjectViewItemController {
   constructor(
     private readonly projectViewItemService: ProjectViewItemService,
@@ -37,6 +58,7 @@ export class ProjectViewItemController {
   }
   @Get('list')
   @ApiOperation({ summary: '获取项目视图项列表' })
+  @ApiPaginatedResponse(ProjectViewItemDetailDto)
   list(
     @Query(new ValidationPipe({ whitelist: true }))
     queryData: listProjectViewItemDto,
