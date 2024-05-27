@@ -44,4 +44,19 @@ export class ProjectViewItemController {
   ) {
     return this.projectViewItemService.list(queryData, req.user.id)
   }
+
+  @Post('edit')
+  @ApiOperation({ summary: '更新项目视图项' })
+  update(
+    @Body(new ValidationPipe({ whitelist: true }))
+    updateProjectViewItemDto: UpdateProjectViewItemDto,
+  ) {
+    return this.projectViewItemService.update(updateProjectViewItemDto)
+  }
+
+  @Delete('delete')
+  @ApiOperation({ summary: '删除项目视图项' })
+  remove(@Query('id') id: string) {
+    return this.projectViewItemService.remove(id)
+  }
 }

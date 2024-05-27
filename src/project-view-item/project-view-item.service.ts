@@ -28,12 +28,26 @@ export class ProjectViewItemService {
     return `This action returns a #${id} projectViewItem`
   }
 
-  update(id: number, updateProjectViewItemDto: UpdateProjectViewItemDto) {
-    return `This action updates a #${id} projectViewItem`
+  async update(updateProjectViewItemDto: UpdateProjectViewItemDto) {
+    const { id, ...rest } = updateProjectViewItemDto
+    await this.prisma.projectViewItem.update({
+      where: {
+        id,
+      },
+      data: {
+        ...rest,
+      },
+    })
+    return 'success'
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} projectViewItem`
+  async remove(id: string) {
+    await this.prisma.projectViewItem.delete({
+      where: {
+        id,
+      },
+    })
+    return 'success'
   }
 
   async list(data: listProjectViewItemDto, userId: string) {
