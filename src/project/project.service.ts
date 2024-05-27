@@ -5,7 +5,6 @@ import { PrismaService } from 'src/prisma/prisma.service'
 import { listProjectDto } from './dto/list-project.dto'
 import { SourceAngleViewService } from 'src/source-angle-view/source-angle-view.service'
 import { SourceAngleViewTree } from 'src/source-angle-view/entities/source-angle-view.entity'
-import { ProjectViewItem } from 'modelLinkType'
 import { ProjectViewItemDetailDto } from 'src/project-view-item/dto/project-view-item-detail.dto'
 
 @Injectable()
