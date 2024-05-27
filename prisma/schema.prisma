@@ -43,6 +43,8 @@ model User {
   SourceAngleView                   SourceAngleView[]
   Project                           Project[]
   ProjectViewItem                   ProjectViewItem[]
+  GraphViewNode                     GraphViewNode[]
+  GraphViewEdge                     GraphViewEdge[]
 }
 
 /// 图元设计
@@ -62,6 +64,7 @@ model GraphicItem {
   viewItems                         ViewItem[]
   SourceModel                       SourceModel[]
   graphicItemAndSourceModelRealtion graphicItemAndSourceModelRealtion[]
+  GraphViewNode                     GraphViewNode[]
 }
 
 enum GraphicItem_type {
@@ -175,6 +178,7 @@ model SourceModel {
   measurementSourceView             SourceView[]                        @relation("measurement")
   graphicSourceView                 SourceView[]                        @relation("graphic")
   SourceAngleView                   SourceAngleView[]
+  GraphViewNode                     GraphViewNode[]
 }
 
 ///元视图
@@ -270,6 +274,7 @@ model Project {
 
   remark          String?
   ProjectViewItem ProjectViewItem[]
+  GraphViewNode   GraphViewNode[]
 }
 
 //项目中的视图实例
@@ -289,4 +294,59 @@ model ProjectViewItem {
 
   sourceAngleViewId String
   sourceAngleView   SourceAngleView @relation(fields: [sourceAngleViewId], references: [id])
+  GraphViewNode     GraphViewNode[]
+  GraphViewEdge     GraphViewEdge[]
+}
+
+/// 图节点
+model GraphViewNode {
+  id        String   @id @default(cuid())
+  name      String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  projectViewItemId String
+  projectViewItem   ProjectViewItem @relation(fields: [projectViewItemId], references: [id])
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  axisX Int
+  axisY Int
+
+  sourceModelId  String?
+  sourceModel    SourceModel? @relation(fields: [sourceModelId], references: [id])
+  // 元模型序号
+  sourceModelNum Int?
+
+  ///是否为引用节点+
+  quoteId String?
+  quote   GraphViewNode? @relation(fields: [quoteId], references: [id], name: "quote")
+
+  graphicItemId String
+  graphicItem   GraphicItem @relation(fields: [graphicItemId], references: [id])
+
+  startEdge     GraphViewEdge[] @relation("start")
+  endEdge       GraphViewEdge[] @relation("end")
+  GraphViewNode GraphViewNode[] @relation("quote")
+}
+
+model GraphViewEdge {
+  id        String   @id @default(cuid())
+  name      String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  projectViewItemId String
+  projectViewItem   ProjectViewItem @relation(fields: [projectViewItemId], references: [id])
+
+  sourceNodeId String
+  sourceNode   GraphViewNode @relation(fields: [sourceNodeId], references: [id], name: "start")
+
+  targetNodeId String
+  targetNode   GraphViewNode @relation(fields: [targetNodeId], references: [id], name: "end")
 }

@@ -12,6 +12,7 @@ import { SourceViewModule } from './source-view/source-view.module'
 import { SourceAngleViewModule } from './source-angle-view/source-angle-view.module'
 import { ProjectModule } from './project/project.module';
 import { ProjectViewItemModule } from './project-view-item/project-view-item.module';
+import { GraphViewNodeModule } from './graph-view-node/graph-view-node.module';
 @Module({
   imports: [
     GraphicItemModule,
@@ -25,6 +26,7 @@ import { ProjectViewItemModule } from './project-view-item/project-view-item.mod
     SourceAngleViewModule,
     ProjectModule,
     ProjectViewItemModule,
+    GraphViewNodeModule,
   ],
   controllers: [],
   providers: [

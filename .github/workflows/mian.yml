@@ -30,6 +30,7 @@ jobs:
           last_ssh: |
             # pm2 stop model-link-backend
             cd ~/model-link-backend
+            rm -rf *
             tar -zxvf project.tar.gz
             # pm2 start dist/src/main.js --name model-link-backend
             # pm2 list
