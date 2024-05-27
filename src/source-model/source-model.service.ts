@@ -8,10 +8,12 @@ import { ListSourceModelDto } from './dto/list-source-model.dto'
 export class SourceModelService {
   constructor(private prisma: PrismaService) {}
   create(createSourceModelDto: CreateSourceModelDto, userId: string) {
-    const { tags, formId, graphicItem, ...rest } = createSourceModelDto
+    const { name, type, tags, formId, graphicItem, ...rest } =
+      createSourceModelDto
     return this.prisma.sourceModel.create({
       data: {
-        ...rest,
+        name,
+        type,
         tags: {
           connect: tags.map((tag) => ({
             id: tag,

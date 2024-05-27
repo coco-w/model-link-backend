@@ -226,6 +226,58 @@ export class SourceViewService {
     }
     return `删除成功`
   }
+
+  async queryById(id: string) {
+    const item = await this.prisma.sourceView.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        view: true,
+      },
+    })
+    const include = {
+      view: true,
+    }
+
+    viewAdditionalDataKey[item.view.type].forEach((key) => {
+      include[key] = true
+    })
+    return await this.prisma.sourceView.findUnique({
+      where: {
+        id,
+      },
+      include: include,
+    })
+  }
+
+  async queryGraphViewDetail(id: string) {
+    return await this.prisma.sourceView.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        view: true,
+        sourceModels: {
+          include: {
+            formEntity: true,
+            graphicItem: true,
+          },
+        },
+        quoteData: true,
+        relationData: {
+          include: {
+            graphicItem: true,
+            sourceModel: {
+              include: {
+                formEntity: true,
+              },
+            },
+          },
+        },
+      },
+    })
+  }
 }
 
 const viewAdditionalDataKey: ViewAdditionalDataKey = {

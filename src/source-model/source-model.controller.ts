@@ -25,7 +25,7 @@ export class SourceModelController {
   @Post('add')
   @ApiOperation({ summary: '创建元模型' })
   create(
-    @Body(new ValidationPipe({ whitelist: true }))
+    @Body()
     createSourceModelDto: CreateSourceModelDto,
     @Req() req: UserRequest,
   ) {

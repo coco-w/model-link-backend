@@ -60,4 +60,16 @@ export class SourceViewController {
   remove(@Query('id') id: string) {
     return this.sourceViewService.remove(id)
   }
+
+  @Get('queryById')
+  @ApiOperation({ summary: '查询元视图数据' })
+  queryById(@Query('id') id: string) {
+    return this.sourceViewService.queryById(id)
+  }
+
+  @Get('queryGraphViewDetail')
+  @ApiOperation({ summary: '查询Graph元视图详情' })
+  queryGraphViewDetail(@Query('id') id: string) {
+    return this.sourceViewService.queryGraphViewDetail(id)
+  }
 }

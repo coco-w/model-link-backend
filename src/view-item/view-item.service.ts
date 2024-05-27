@@ -114,4 +114,28 @@ export class ViewItemService {
 
     return list
   }
+
+  async getGraphicsByViewId(id: string) {
+    const data = await this.prisma.viewItem.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        graphicItems: true,
+        formEntity: true,
+      },
+    })
+    return data.graphicItems
+  }
+  async queryById(id: string) {
+    return await this.prisma.viewItem.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        graphicItems: true,
+        formEntity: true,
+      },
+    })
+  }
 }

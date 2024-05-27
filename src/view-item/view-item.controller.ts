@@ -12,11 +12,14 @@ import {
 import { ViewItemService } from './view-item.service'
 import { CreateViewItemDto } from './dto/create-view-item.dto'
 import { UpdateViewItemDto } from './dto/update-view-item.dto'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ListViewItemDto } from './dto/list-veiw-item.dto'
+import { ApiListResponse } from 'src/decorator/api-list-response.decorator'
+import { UpdateGraphicItemDto } from 'src/graphic-item/dto/update-graphic-item.dto'
 
 @Controller('view-item')
 @ApiTags('视图')
+@ApiExtraModels(ApiListResponse, UpdateGraphicItemDto)
 export class ViewItemController {
   constructor(private readonly viewItemService: ViewItemService) {}
   @ApiOperation({ summary: '创建' })
@@ -45,5 +48,18 @@ export class ViewItemController {
   })
   list(@Query() data: ListViewItemDto, @Req() req) {
     return this.viewItemService.list(data, req.user.id)
+  }
+
+  @Get('getGraphicsByViewId')
+  @ApiOperation({ summary: '查询视图graphics' })
+  @ApiListResponse(UpdateGraphicItemDto)
+  getGraphicsByViewId(@Query('id') id: string) {
+    return this.viewItemService.getGraphicsByViewId(id)
+  }
+
+  @Get('queryById')
+  @ApiOperation({ summary: '查询' })
+  queryById(@Query('id') id: string) {
+    return this.viewItemService.queryById(id)
   }
 }
