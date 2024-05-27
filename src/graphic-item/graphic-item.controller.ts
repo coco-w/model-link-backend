@@ -8,6 +8,7 @@ import {
   Delete,
   Req,
   Query,
+  ValidationPipe,
 } from '@nestjs/common'
 import { GraphicItemService } from './graphic-item.service'
 import { CreateGraphicItemDto } from './dto/create-graphic-item.dto'
@@ -34,7 +35,10 @@ export class GraphicItemController {
 
   @Patch()
   @ApiOperation({ summary: '更新' })
-  update(@Body() updateGraphicItemDto: UpdateGraphicItemDto) {
+  update(
+    @Body(new ValidationPipe({ whitelist: true }))
+    updateGraphicItemDto: UpdateGraphicItemDto,
+  ) {
     return this.graphicItemService.update(updateGraphicItemDto)
   }
 

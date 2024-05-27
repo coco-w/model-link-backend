@@ -64,12 +64,25 @@ export class ProjectService {
     }
   }
 
-  update(id: number, updateProjectDto: UpdateProjectDto) {
-    return `This action updates a #${id} project`
+  async update(updateProjectDto: UpdateProjectDto) {
+    await this.prisma.project.update({
+      where: {
+        id: updateProjectDto.id,
+      },
+      data: {
+        ...updateProjectDto,
+      },
+    })
+    return '更新成功'
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} project`
+  async remove(id: string) {
+    await this.prisma.project.delete({
+      where: {
+        id,
+      },
+    })
+    return '删除成功'
   }
   async list(data: listProjectDto, userId: string) {
     const { pageNo, pageSize, ...rest } = data

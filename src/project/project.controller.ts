@@ -39,15 +39,18 @@ export class ProjectController {
   }
 
   @ApiOperation({ summary: '更新项目' })
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
-    return this.projectService.update(+id, updateProjectDto)
+  @Post('edit')
+  update(
+    @Body(new ValidationPipe({ whitelist: true }))
+    updateProjectDto: UpdateProjectDto,
+  ) {
+    return this.projectService.update(updateProjectDto)
   }
 
   @ApiOperation({ summary: '删除项目' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.projectService.remove(+id)
+  remove(@Query('id') id: string) {
+    return this.projectService.remove(id)
   }
 
   @ApiOperation({ summary: '获取项目详情' })
