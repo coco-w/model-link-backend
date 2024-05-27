@@ -16,7 +16,7 @@ jobs:
       - name: 打包
         run: yarn build
       - name: 压缩
-        run: tar -zcvf dist.tar.gz dist
+        run: tar -zcvf project.tar.gz ./*
 
       - name: Deploy to Server # 执行部署任务
         uses: cross-the-world/ssh-scp-ssh-pipelines@latest
@@ -25,8 +25,8 @@ jobs:
           user: ${{ secrets.SERVER_USER }}
           pass: ${{ secrets.SERVER_PASS }}
           scp: |
-            dist.tar.gz => ~/model-link-backend
+            project.tar.gz => ~/model-link-backend
           # 完成拷贝后在部署服务器执行的命令：进入项目目录，安装生产依赖，并使用 pm2 管理
           last_ssh: |
             cd ~/model-link-backend
-            tar -zxvf dist.tar.gz
+            tar -zxvf project.tar.gz
