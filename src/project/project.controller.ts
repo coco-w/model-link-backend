@@ -9,16 +9,21 @@ import {
   Req,
   ValidationPipe,
   Query,
+  Res,
 } from '@nestjs/common'
 import { ProjectService } from './project.service'
 import { CreateProjectDto } from './dto/create-project.dto'
 import { UpdateProjectDto } from './dto/update-project.dto'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { UserRequest } from 'src/utils/type'
 import { listProjectDto } from './dto/list-project.dto'
+import { ApiObjResponse } from 'src/decorator/api-obj-response.decorator'
+import { ProjectDetailDto } from './dto/project-detail.dto'
+import { SourceAngleViewTree } from 'src/source-angle-view/entities/source-angle-view.entity'
 
 @ApiTags('项目管理')
 @Controller('project')
+@ApiExtraModels(ProjectDetailDto, ApiObjResponse, SourceAngleViewTree)
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
@@ -55,6 +60,7 @@ export class ProjectController {
 
   @ApiOperation({ summary: '获取项目详情' })
   @Get('queryById')
+  @ApiObjResponse(ProjectDetailDto)
   findOne(@Query('id') id: string) {
     return this.projectService.findOne(id)
   }

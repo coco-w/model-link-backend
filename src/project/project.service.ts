@@ -6,6 +6,7 @@ import { listProjectDto } from './dto/list-project.dto'
 import { SourceAngleViewService } from 'src/source-angle-view/source-angle-view.service'
 import { SourceAngleViewTree } from 'src/source-angle-view/entities/source-angle-view.entity'
 import { ProjectViewItem } from 'modelLinkType'
+import { ProjectViewItemDetailDto } from 'src/project-view-item/dto/project-view-item-detail.dto'
 
 @Injectable()
 export class ProjectService {
@@ -40,15 +41,35 @@ export class ProjectService {
       where: {
         projectId: id,
       },
+      include: {
+        sourceAngleView: {
+          include: {
+            sourceView: {
+              include: {
+                view: true,
+              },
+            },
+          },
+        },
+      },
     })
-    this.deepTree(treeData, projectViewItems)
+    const projectViewItemsDetail: ProjectViewItemDetailDto[] =
+      projectViewItems.map((item) => ({
+        ...item,
+        viewItemId: item.sourceAngleView.sourceView.viewId,
+        viewItemType: item.sourceAngleView.sourceView.view.type,
+      }))
+    this.deepTree(treeData, projectViewItemsDetail)
     return {
       ...projectItem,
       treeData,
     }
   }
 
-  deepTree(data: SourceAngleViewTree[], projectViewItems: ProjectViewItem[]) {
+  deepTree(
+    data: SourceAngleViewTree[],
+    projectViewItems: ProjectViewItemDetailDto[],
+  ) {
     for (let i = 0; i < data.length; i++) {
       const item = data[i]
 
