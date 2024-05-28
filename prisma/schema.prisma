@@ -45,6 +45,7 @@ model User {
   ProjectViewItem                   ProjectViewItem[]
   GraphViewNode                     GraphViewNode[]
   GraphViewEdge                     GraphViewEdge[]
+  FormValue                         FormValue[]
 }
 
 /// 图元设计
@@ -85,6 +86,7 @@ model FormEntity {
   user        User          @relation(fields: [userId], references: [id])
   viewItems   ViewItem[]
   SourceModel SourceModel[]
+  FormValue   FormValue[]
 }
 
 /// 视图设计
@@ -275,6 +277,7 @@ model Project {
   remark          String?
   ProjectViewItem ProjectViewItem[]
   GraphViewNode   GraphViewNode[]
+  FormValue       FormValue[]
 }
 
 //项目中的视图实例
@@ -296,6 +299,7 @@ model ProjectViewItem {
   sourceAngleView   SourceAngleView @relation(fields: [sourceAngleViewId], references: [id])
   GraphViewNode     GraphViewNode[]
   GraphViewEdge     GraphViewEdge[]
+  FormValue         FormValue[]
 }
 
 /// 图节点
@@ -334,6 +338,7 @@ model GraphViewNode {
   startEdge     GraphViewEdge[] @relation("start")
   endEdge       GraphViewEdge[] @relation("end")
   GraphViewNode GraphViewNode[] @relation("quote")
+  formValue     FormValue?
 }
 
 model GraphViewEdge {
@@ -352,4 +357,26 @@ model GraphViewEdge {
 
   targetNodeId String
   targetNode   GraphViewNode @relation(fields: [targetNodeId], references: [id], name: "end")
+}
+
+model FormValue {
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  formEntityId String
+  formEntity   FormEntity @relation(fields: [formEntityId], references: [id])
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  projectViewItemId String
+  projectViewItem   ProjectViewItem @relation(fields: [projectViewItemId], references: [id])
+
+  graphViewNode   GraphViewNode @relation(fields: [graphViewNodeId], references: [id])
+  graphViewNodeId String        @unique
+
+  data String @db.Text
 }

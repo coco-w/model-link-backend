@@ -77,6 +77,7 @@ export class GraphViewNodeService {
         },
         graphicItem: true,
         quote: true,
+        formValue: true,
       },
     })
   }

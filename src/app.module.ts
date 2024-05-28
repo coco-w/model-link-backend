@@ -13,6 +13,7 @@ import { SourceAngleViewModule } from './source-angle-view/source-angle-view.mod
 import { ProjectModule } from './project/project.module';
 import { ProjectViewItemModule } from './project-view-item/project-view-item.module';
 import { GraphViewNodeModule } from './graph-view-node/graph-view-node.module';
+import { FormValueModule } from './form-value/form-value.module';
 @Module({
   imports: [
     GraphicItemModule,
@@ -27,6 +28,7 @@ import { GraphViewNodeModule } from './graph-view-node/graph-view-node.module';
     ProjectModule,
     ProjectViewItemModule,
     GraphViewNodeModule,
+    FormValueModule,
   ],
   controllers: [],
   providers: [
