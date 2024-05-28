@@ -44,12 +44,12 @@ export class GraphViewNodeController {
     return this.graphViewNodeService.findOne(+id)
   }
 
-  @Patch(':id')
+  @Post('edit')
   update(
-    @Param('id') id: string,
-    @Body() updateGraphViewNodeDto: UpdateGraphViewNodeDto,
+    @Body(new ValidationPipe({ whitelist: true }))
+    updateGraphViewNodeDto: UpdateGraphViewNodeDto,
   ) {
-    return this.graphViewNodeService.update(+id, updateGraphViewNodeDto)
+    return this.graphViewNodeService.update(updateGraphViewNodeDto)
   }
 
   @Delete(':id')

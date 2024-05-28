@@ -45,8 +45,15 @@ export class GraphViewNodeService {
     return `This action returns a #${id} graphViewNode`
   }
 
-  update(id: number, updateGraphViewNodeDto: UpdateGraphViewNodeDto) {
-    return `This action updates a #${id} graphViewNode`
+  async update(updateGraphViewNodeDto: UpdateGraphViewNodeDto) {
+    return await this.prisma.graphViewNode.update({
+      where: {
+        id: updateGraphViewNodeDto.id,
+      },
+      data: {
+        ...updateGraphViewNodeDto,
+      },
+    })
   }
 
   async remove(id: string) {
