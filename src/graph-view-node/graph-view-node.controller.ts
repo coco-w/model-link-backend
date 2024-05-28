@@ -8,11 +8,12 @@ import {
   Delete,
   Req,
   ValidationPipe,
+  Query,
 } from '@nestjs/common'
 import { GraphViewNodeService } from './graph-view-node.service'
 import { CreateGraphViewNodeDto } from './dto/create-graph-view-node.dto'
 import { UpdateGraphViewNodeDto } from './dto/update-graph-view-node.dto'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { UserRequest } from 'src/utils/type'
 
 @ApiTags('图视图节点')
@@ -28,7 +29,11 @@ export class GraphViewNodeController {
   ) {
     return this.graphViewNodeService.create(createGraphViewNodeDto, req.user.id)
   }
-
+  @Get('listDetail')
+  @ApiOperation({ summary: '获取图视图节点列表' })
+  async listDetail(@Query('projectViewItemId') id: string) {
+    return await this.graphViewNodeService.listDetail(id)
+  }
   @Get()
   findAll() {
     return this.graphViewNodeService.findAll()
@@ -48,7 +53,7 @@ export class GraphViewNodeController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.graphViewNodeService.remove(+id)
+  remove(@Query('id') id: string) {
+    return this.graphViewNodeService.remove(id)
   }
 }

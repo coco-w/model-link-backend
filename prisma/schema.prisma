@@ -313,8 +313,11 @@ model GraphViewNode {
   projectId String
   project   Project @relation(fields: [projectId], references: [id])
 
-  axisX Int
-  axisY Int
+  axisX  Int
+  axisY  Int
+  width  Int?
+  height Int?
+  style  String? @db.Text
 
   sourceModelId  String?
   sourceModel    SourceModel? @relation(fields: [sourceModelId], references: [id])

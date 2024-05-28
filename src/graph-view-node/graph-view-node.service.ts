@@ -49,7 +49,28 @@ export class GraphViewNodeService {
     return `This action updates a #${id} graphViewNode`
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} graphViewNode`
+  async remove(id: string) {
+    return await this.prisma.graphViewNode.delete({
+      where: {
+        id,
+      },
+    })
+  }
+
+  async listDetail(projectViewItemId: string) {
+    return await this.prisma.graphViewNode.findMany({
+      where: {
+        projectViewItemId,
+      },
+      include: {
+        sourceModel: {
+          include: {
+            formEntity: true,
+          },
+        },
+        graphicItem: true,
+        quote: true,
+      },
+    })
   }
 }
