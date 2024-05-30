@@ -62,14 +62,15 @@ export class SourceModelService {
         formEntity: {
           connect: { id: updateSourceModelDto.formId },
         },
-        graphicItem: graphicItem
-          ? {
-              update: {
-                where: { id: graphicItem.id },
-                data: graphicItem,
-              },
-            }
-          : undefined,
+        graphicItem:
+          graphicItem && graphicItem.id
+            ? {
+                update: {
+                  where: { id: graphicItem.id },
+                  data: graphicItem,
+                },
+              }
+            : undefined,
         tags: tags
           ? {
               // 断开所有不在 tags 中的连接
