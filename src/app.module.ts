@@ -14,6 +14,7 @@ import { ProjectModule } from './project/project.module';
 import { ProjectViewItemModule } from './project-view-item/project-view-item.module';
 import { GraphViewNodeModule } from './graph-view-node/graph-view-node.module';
 import { FormValueModule } from './form-value/form-value.module';
+import { GraphViewEdgeModule } from './graph-view-edge/graph-view-edge.module';
 @Module({
   imports: [
     GraphicItemModule,
@@ -29,6 +30,7 @@ import { FormValueModule } from './form-value/form-value.module';
     ProjectViewItemModule,
     GraphViewNodeModule,
     FormValueModule,
+    GraphViewEdgeModule,
   ],
   controllers: [],
   providers: [

@@ -2,6 +2,8 @@ import fs from 'fs'
 import { exec } from 'child_process'
 import { $ } from 'bun'
 import https from 'https'
+import dotenv from 'dotenv'
+import path from 'path'
 
 const writeFile = () => {
   fs.readdir('node_modules/.prisma/client', (err, files) => {
@@ -64,5 +66,27 @@ const uploadNpm = async () => {
   const data = fs.readFileSync('modelLinkType/package.json', 'utf8')
   const newData = data.replace(version, newVersionStr)
   fs.writeFileSync('modelLinkType/package.json', newData)
+  updateFront()
 }
+const updateFront = () => {
+  fs.readdir('./modelLinkType', (err, files) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    files.forEach((file) => {
+      console.log(file)
+      const sourceFile = path.join('./modelLinkType', file)
+      const targetFile = path.join(process.env.frontPath, file)
+      fs.copyFile(sourceFile, targetFile, (err) => {
+        if (err) {
+          console.error(err, sourceFile, targetFile)
+          return
+        }
+        console.log(`move ${sourceFile} to ${targetFile}`)
+      })
+    })
+  })
+}
+
 uploadNpm()

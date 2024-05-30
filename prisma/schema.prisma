@@ -181,6 +181,7 @@ model SourceModel {
   graphicSourceView                 SourceView[]                        @relation("graphic")
   SourceAngleView                   SourceAngleView[]
   GraphViewNode                     GraphViewNode[]
+  GraphViewEdge                     GraphViewEdge[]
 }
 
 ///元视图
@@ -278,6 +279,7 @@ model Project {
   ProjectViewItem ProjectViewItem[]
   GraphViewNode   GraphViewNode[]
   FormValue       FormValue[]
+  GraphViewEdge   GraphViewEdge[]
 }
 
 //项目中的视图实例
@@ -343,7 +345,6 @@ model GraphViewNode {
 
 model GraphViewEdge {
   id        String   @id @default(cuid())
-  name      String
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
   userId    String
@@ -357,6 +358,17 @@ model GraphViewEdge {
 
   targetNodeId String
   targetNode   GraphViewNode @relation(fields: [targetNodeId], references: [id], name: "end")
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id])
+
+  sourceModelId String?
+  sourceModel   SourceModel? @relation(fields: [sourceModelId], references: [id])
+
+  points    String     @db.Text
+  style     String     @db.Text
+  edgeValue String?
+  formValue FormValue?
 }
 
 model FormValue {
@@ -375,8 +387,11 @@ model FormValue {
   projectViewItemId String
   projectViewItem   ProjectViewItem @relation(fields: [projectViewItemId], references: [id])
 
-  graphViewNode   GraphViewNode @relation(fields: [graphViewNodeId], references: [id])
-  graphViewNodeId String        @unique
+  graphViewNode   GraphViewNode? @relation(fields: [graphViewNodeId], references: [id])
+  graphViewNodeId String?        @unique
+
+  graphViewEdge   GraphViewEdge? @relation(fields: [graphViewEdgeId], references: [id])
+  graphViewEdgeId String?        @unique
 
   data String @db.Text
 }
