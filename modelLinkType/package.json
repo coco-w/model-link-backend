@@ -1,5 +1,5 @@
 {
-  "name": "modellinktype",
+  "name": "model-link-type",
   "version": "1.0.4",
   "description": "model link 前后端项目共用的ts定义文件",
   "main": "index.js",

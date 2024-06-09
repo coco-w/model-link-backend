@@ -46,6 +46,7 @@ model User {
   GraphViewNode                     GraphViewNode[]
   GraphViewEdge                     GraphViewEdge[]
   FormValue                         FormValue[]
+  Gallery                           Gallery[]
 }
 
 /// 图元设计
@@ -394,4 +395,18 @@ model FormValue {
   graphViewEdgeId String?        @unique
 
   data String @db.Text
+}
+
+/// 图库管理
+model Gallery {
+  id        String   @id @default(cuid())
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  name   String
+  width  Int
+  height Int
+  path   String
 }

@@ -21,6 +21,10 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import { join } from 'path'
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../..', 'public/uploaded'),
+      serveRoot: '/static',
+    }),
     GraphicItemModule,
     UserModule,
     ViewItemModule,
@@ -36,10 +40,7 @@ import { join } from 'path'
     FormValueModule,
     GraphViewEdgeModule,
     GalleryModule,
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public/uploaded'),
-      serveRoot: '/static',
-    }),
+
     UploadFileModule,
   ],
   controllers: [],
